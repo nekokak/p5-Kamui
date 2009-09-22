@@ -5,6 +5,7 @@ use Exporter::AutoClean;
 use UNIVERSAL::require;
 use Carp;
 use String::CamelCase qw/camelize/;
+use Path::Class qw/file dir/;
 
 sub import {
     my ($class, @opts) = @_;
@@ -25,12 +26,59 @@ sub import {
             $caller,
             register => sub { $r->($caller, @_) },
         );
+        return;
     }
     elsif(@opts) {
         $class->_export_functions($caller => @opts);
     }
 
     $class->_export_container($caller);
+    $class->initialize;
+}
+
+sub initialize {
+    my $class = shift;
+
+    $class->register(
+        home => sub {
+            return $ENV{KAMUI_HOME} if $ENV{KAMUI_HOME};
+            my $class = shift;
+
+            $class = ref $class || $class;
+            (my $file = "${class}.pm") =~ s!::!/!g;
+            if (my $path = $INC{$file}) {
+                $path =~ s/$file$//;
+                $path = dir($path);
+                if (-d $path) {
+                    $path = $path->absolute;
+                    while ($path->dir_list(-1) =~ /^b?lib$/) {
+                        $path = $path->parent;
+                    }
+                    return $path;
+                }
+            }
+            die 'Cannot detect home directory, please set it manually: $ENV{KAMUI_HOME}';
+        },
+    );
+
+    $class->register(
+        conf => sub {
+            my $class = shift;
+            my $home = $class->get('home');
+
+            my $conf = {};
+            for my $fn (qw/config.pl config_local.pl/) {
+                my $file = $home->file($fn);
+                if (-e $file) {
+                    my $c = require $file;
+                    die 'config should return HASHREF'
+                        unless ref($c) and ref($c) eq 'HASH';
+                    $conf = { %$conf, %$c };
+                }
+            }
+            $conf;
+        },
+    );
 }
 
 sub _export_functions {
