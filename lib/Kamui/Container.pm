@@ -113,11 +113,6 @@ sub _export_container {
     }
 }
 
-sub load_class {
-    my ($class, $pkg) = @_;
-    $pkg->require or Carp::croak $@;
-}
-
 sub register {
     my ($self, $class, @init_opt) = @_;
     $self = $self->instance unless ref $self;
