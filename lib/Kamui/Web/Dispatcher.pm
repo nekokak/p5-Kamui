@@ -36,13 +36,13 @@ sub determine {
     my ($class, $r) = @_;
 
     for my $dispatch_rule (@{$class->dispatch_table}) {
-        if ($r->uri =~ $dispatch_rule->{regexp}) {
+        if ($r->path =~ $dispatch_rule->{regexp}) {
             my ($controller, $page, $static, $args) = $dispatch_rule->{code}->();
             if ($controller) {
                 $controller = join '::', $class->base_name, 'Web', 'Controller', $controller;
                 return +{
                     controller => $controller,
-                    page       => $page,
+                    action     => $page,
                     is_static  => $static,
                     args       => $args
                 };

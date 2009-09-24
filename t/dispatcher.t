@@ -13,7 +13,7 @@ describe 'dispatcher tests' => run {
         my $map = Mock::Web::Dispatcher->determine($r);
         is_deeply $map, {
             controller => 'Mock::Web::Controller::Root',
-            page       => 'index',
+            action     => 'index',
             is_static  => 0,
             args       => {},
         };
@@ -23,7 +23,7 @@ describe 'dispatcher tests' => run {
         my $map = Mock::Web::Dispatcher->determine($r);
         is_deeply $map, {
             controller => 'Mock::Web::Controller::Root',
-            page       => 'index',
+            action     => 'index',
             is_static  => 0,
             args       => { p => 'foo'},
         };
