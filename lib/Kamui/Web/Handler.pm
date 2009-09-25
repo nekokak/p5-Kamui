@@ -7,6 +7,10 @@ use UNIVERSAL::require;
 
 sub new {
     my $class = shift;
+
+    my $container = join '::', $class->base_name, 'Container';
+    $container->use or die $@;
+
     bless {}, $class;
 }
 
@@ -22,11 +26,12 @@ sub psgi_handler {
         $dispatcher->require or die "can't find dispatcher : $@";
 
         my $rule = $dispatcher->determine($req);
+
         my $context = Kamui::Web::Context->new(
             req           => $req,
             app           => $self,
             dispatch_rule => $rule,
-            conf          => $self->conf,
+            conf          => container('conf'),
         );
 
         return Kamui::Web::Controller->dispatch($context);

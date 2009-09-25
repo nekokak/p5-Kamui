@@ -1,6 +1,7 @@
 package Kamui::Web::Context;
 use Kamui;
 use URI;
+use Encode;
 
 sub new {
     my $class = shift;
@@ -27,7 +28,7 @@ sub render {
     $self->load_class($self->view);
     my $out = $self->view->render($self);
 
-    return [ 200, [ 'Content-Type' => 'text/html' ], [$out] ];
+    return [ 200, [ 'Content-Type' => 'text/html' ], [Encode::encode('utf8',$out)] ];
 }
 
 sub is_redirect { $_[0]->{is_redirect} }

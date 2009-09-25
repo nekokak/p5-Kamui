@@ -149,28 +149,3 @@ sub get {
 
 1;
 
-__END__
-package Your::Container;
-use Kamui::Container -base;
-
-register 'model' => sub {
-}
-
-package Your::Hoge;
-use Your::Container;
-
-sub run {
-    container('model')->single('aiu',{});
-    container('config')->{foo}->{bar};
-}
-
-package Your::Moge;
-use Your::Container qw/api model config/;
-
-sub run {
-    api('amazon')->
-    config('app')->
-    model('db')->
-    container('foo')
-}
-
