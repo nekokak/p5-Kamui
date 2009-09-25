@@ -7,17 +7,16 @@ sub dispatch {
 
     my $controller = $context->dispatch_rule->{controller};
     $controller->use or return $context->handle_404;
-    my $method = $context->dispatch_rule->{action} or return $context->handle_404;
+    my $action = $context->dispatch_rule->{action} or return $context->handle_404;
+    my $method = 'dispatch_'.$action;
 
     if ($controller->can($method)) {
         my $code;
         eval {
             $code = $controller->$method($context, $context->dispatch_rule->{args});
         };
-        if ($@) { return $context->handle_500 }
-        if ($context->is_redirect) {
-            return $code;
-        }
+        return $context->handle_500 if $@;
+        return $code if $context->is_redirect;
         return $context->render;
     } else {
         return $context->handle_404;
