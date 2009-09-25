@@ -32,9 +32,9 @@ sub psgi_handler {
 
         my $context = Kamui::Web::Context->new(
             req           => $req,
-            app           => $self,
             dispatch_rule => $rule,
             conf          => container('conf'),
+            home          => container('home'),
         );
 
         return Kamui::Web::Controller->dispatch($context);
