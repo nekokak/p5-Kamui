@@ -22,8 +22,11 @@ sub psgi_handler {
 
         my $req  = Plack::Request->new($env);
 
-        my $dispatcher = join '::', $self->base_name, 'Web', 'Dispatcher';
-        $dispatcher->require or die "can't find dispatcher : $@";
+        my $dispatcher = $self->{dispatch_class} ||= do {
+            my $dispatch_class = join '::', $self->base_name, 'Web', 'Dispatcher';
+            $dispatch_class->require or die "can't find dispatcher : $@";
+            $dispatch_class;
+        };
 
         my $rule = $dispatcher->determine($req);
 
