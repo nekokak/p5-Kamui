@@ -39,9 +39,8 @@ sub determine {
         if ($r->path =~ $dispatch_rule->{regexp}) {
             my ($controller, $page, $static, $args) = $dispatch_rule->{code}->();
             if ($controller) {
-                $controller = join '::', $class->base_name, 'Web', 'Controller', $controller;
                 return +{
-                    controller => $controller,
+                    controller => join('::', $class->base_name, 'Web', 'Controller', $controller),
                     action     => $page,
                     is_static  => $static,
                     args       => $args
@@ -55,17 +54,4 @@ sub determine {
 }
 
 1;
-
-__END__
-
-package Your::Web::Dispatcher;
-use Kamui;
-use Kamui::Web::Dispatcher;
-
-on '/(.+?)/' => run {
-    return 'Foo', 'index', FALSE, +{}
-};
-
-1;
-
 
