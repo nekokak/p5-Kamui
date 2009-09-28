@@ -12,5 +12,11 @@ sub dispatch_index {
     }
 }
 
+sub dispatch_json {
+    my ($class, $c) = @_;
+    $c->stash->{json} = +{name => 'nekokak'};
+    $c->view('JSON');
+}
+
 1;
 

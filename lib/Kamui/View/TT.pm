@@ -6,6 +6,7 @@ use File::Spec;
 use Template::Stash::EscapeHTML;
 use HTML::Entities;
 use String::CamelCase qw/decamelize/;
+use Encode;
 
 sub render {
     my ($class, $context) = @_;
@@ -21,8 +22,8 @@ sub render {
             html_unescape => sub { HTML::Entities::decode_entities(shift) },
         },
         COMPILE_DIR  => '/tmp/' . $ENV{USER} . "/",
-        INCLUDE_PATH => [ '.', File::Spec->catfile($context->conf->{tmpl}->{path}) ],
-        %{ $context->conf->{tmpl}->{options} || {} },
+        INCLUDE_PATH => [ '.', File::Spec->catfile($context->conf->{view}->{tt}->{path}) ],
+        %{ $context->conf->{view}->{tt}->{options} || {} },
     );
     $tt->process(
         $template,
@@ -33,7 +34,7 @@ sub render {
         \my $output
     ) or die $@;
 
-    $output;
+    return [ 200, [ 'Content-Type' => 'text/html' ], [Encode::encode('utf8',$output)] ];
 }
 
 sub guess_filename {

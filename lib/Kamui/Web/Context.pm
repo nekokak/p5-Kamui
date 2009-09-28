@@ -6,7 +6,7 @@ use Encode;
 sub new {
     my $class = shift;
     bless {
-        view => 'Kamui::View::TT',
+        _view => 'Kamui::View::TT',
         @_
     }, $class;
 }
@@ -14,7 +14,16 @@ sub new {
 sub req { $_[0]->{req} }
 sub app { $_[0]->{app} }
 sub dispatch_rule { $_[0]->{dispatch_rule} }
-sub view : lvalue { $_[0]->{view} }
+sub view {
+    my ($self, $view) = @_;
+
+    if ($view) {
+        $self->{_view} = 'Kamui::View::'.$view;
+    } else {
+        $self->{_view};
+    }
+}
+
 sub load_template : lvalue { $_[0]->{load_template} }
 sub stash : lvalue {
     my $self = shift;
@@ -26,9 +35,7 @@ sub render {
     my $self = shift;
 
     $self->load_class($self->view);
-    my $out = $self->view->render($self);
-
-    return [ 200, [ 'Content-Type' => 'text/html' ], [Encode::encode('utf8',$out)] ];
+    $self->view->render($self);
 }
 
 sub is_redirect { $_[0]->{is_redirect} }

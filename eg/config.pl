@@ -4,8 +4,14 @@ use Path::Class;
 my $home = container('home');
 
 return +{
-    tmpl => {
-        path    => $home->file('assets/tmpl')->stringify,
-        options => '',
+    view => {
+        tt   => +{
+            path    => $home->file('assets/tmpl')->stringify,
+            options => '',
+        },
+        json => +{
+            stash_key      => 'json',
+            callback_param => 'callback',
+        },
     },
 };
