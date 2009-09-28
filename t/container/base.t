@@ -14,7 +14,7 @@ describe 'container tests' => run {
     };
 
     test 'builtin container object: conf' => run {
-        is_deeply container('conf'), +{ foo => 'bar', name => 'nekokak' };
+        is_deeply container('conf')->{conf_test}, +{ foo => 'bar', name => 'nekokak' };
     };
 
     test 'export container function' => run {
