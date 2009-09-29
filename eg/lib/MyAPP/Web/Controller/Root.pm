@@ -1,6 +1,20 @@
 package MyAPP::Web::Controller::Root;
 use Kamui::Web::Controller;
 
+register_hook(
+    'before_dispatch' => sub{
+        my $c = shift;
+        $c->stash->{before_dispatch} = 'before_dispatch_ok';
+    },
+);
+
+register_hook(
+    'after_dispatch' => sub{
+        my $c = shift;
+        $c->stash->{after_dispatch} = 'after_dispatch_ok';
+    },
+);
+
 sub dispatch_index {
     my ($class, $c, $args) = @_;
     $c->stash->{nick} = $c->req->param('nick') || 'nekokak';

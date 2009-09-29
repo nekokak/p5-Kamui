@@ -79,7 +79,9 @@ sub dispatch {
     if ($controller->can($method)) {
         my $code;
         eval {
+            $controller->call_hook('before_dispatch', $context);
             $code = $controller->$method($context, $context->dispatch_rule->{args});
+            $controller->call_hook('after_dispatch', $context);
         };
         return $context->handle_500 if $@;
         return $code if $context->is_finished;
