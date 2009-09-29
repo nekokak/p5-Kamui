@@ -5,12 +5,20 @@ use Kamui::Web::Controller;
 use Plack::Request;
 use UNIVERSAL::require;
 
+sub import {
+    my $caller = caller;
+
+    my $pkg = caller(0);
+    for my $meth ( qw/new psgi_handler use_container/ ) {
+        no strict 'refs';
+        *{"$pkg\::$meth"} = \&$meth;
+    }
+
+    goto &Kamui::import;
+}
+
 sub new {
     my $class = shift;
-
-    my $container = join '::', $class->base_name, 'Container';
-    $container->use or die $@;
-
     bless {}, $class;
 }
 
@@ -34,11 +42,15 @@ sub psgi_handler {
             req           => $req,
             dispatch_rule => $rule,
             conf          => container('conf'),
-            home          => container('home'),
         );
 
         return Kamui::Web::Controller->dispatch($context);
     };
+}
+
+sub use_container($) { ## no critic.
+    my $container = shift;
+    $container->use or die $@;
 }
 
 1;
