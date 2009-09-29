@@ -1,5 +1,5 @@
 package Mock::Web::Controller::Test;
-use Kamui;
+use Kamui::Web::Controller;
 
 sub dispatch_handler_base_test { }
 sub dispatch_query_test {

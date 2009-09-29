@@ -1,12 +1,15 @@
 package Kamui::Web::Controller;
 use Kamui;
-use UNIVERSAL::require;
 
-sub dispatch {
-    my ($class, $context) = @_;
-
-    # nop..
+sub import {
+    my $caller = caller(0);
+    goto &Kamui::import;
 }
 
 1;
+
+__END__
+
+register_hook
+call_hook
 
