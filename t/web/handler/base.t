@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-use lib qw(./t/lib);
+use t::Utils;
 use Test::Declare;
 use Mock::Web::Handler;
 

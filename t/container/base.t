@@ -1,7 +1,5 @@
-use strict;
-use warnings;
+use t::Utils;
 use Test::Declare;
-use lib './t/lib';
 use Mock::Container;
 
 plan tests => blocks;
