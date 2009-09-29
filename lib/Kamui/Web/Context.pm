@@ -6,7 +6,6 @@ use Encode;
 sub new {
     my $class = shift;
     bless {
-        _view => 'Kamui::View::TT', # default view
         @_
     }, $class;
 }
@@ -18,9 +17,9 @@ sub view {
     my ($self, $view) = @_;
 
     if ($view) {
-        $self->{_view} = 'Kamui::View::'.$view;
+        $self->{view} = 'Kamui::View::'.$view;
     } else {
-        $self->{_view};
+        $self->{view};
     }
 }
 

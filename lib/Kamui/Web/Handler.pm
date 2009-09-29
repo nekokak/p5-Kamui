@@ -9,7 +9,7 @@ sub import {
     my $caller = caller;
 
     my $pkg = caller(0);
-    for my $meth ( qw/new psgi_handler use_container/ ) {
+    for my $meth ( qw/new psgi_handler use_container dispatcher view/ ) {
         no strict 'refs';
         *{"$pkg\::$meth"} = \&$meth;
     }
@@ -22,6 +22,25 @@ sub new {
     bless {}, $class;
 }
 
+my $dispatcher;
+sub dispatcher ($) { ## no critic.
+    my $pkg = shift;
+    $pkg->use or die $@;
+    $dispatcher = $pkg;
+}
+
+my $view;
+sub view ($) { ## no critic.
+    my $pkg = shift;
+    $pkg->use or die;
+    $view = $pkg;
+}
+
+sub use_container($) { ## no critic.
+    my $container = shift;
+    $container->use or die $@;
+}
+
 sub psgi_handler {
     my $self = shift;
 
@@ -30,27 +49,44 @@ sub psgi_handler {
 
         my $req  = Plack::Request->new($env);
 
-        my $dispatcher = $self->{dispatch_class} ||= do {
+        $dispatcher ||= do {
             my $dispatch_class = join '::', $self->base_name, 'Web', 'Dispatcher';
-            $dispatch_class->require or die "can't find dispatcher : $@";
-            $dispatch_class;
+            dispatcher($dispatch_class);
         };
 
+        $dispatcher->determine($req);
         my $rule = $dispatcher->determine($req);
 
         my $context = Kamui::Web::Context->new(
             req           => $req,
             dispatch_rule => $rule,
+            view          => $view || 'Kamui::View::TT',
             conf          => container('conf'),
         );
 
-        return Kamui::Web::Controller->dispatch($context);
+        return dispatch($context);
     };
 }
 
-sub use_container($) { ## no critic.
-    my $container = shift;
-    $container->use or die $@;
+sub dispatch {
+    my $context = shift;
+
+    my $controller = $context->dispatch_rule->{controller};
+    $controller->use or return $context->handle_404;
+    my $action = $context->dispatch_rule->{action} or return $context->handle_404;
+    my $method = 'dispatch_'.$action;
+
+    if ($controller->can($method)) {
+        my $code;
+        eval {
+            $code = $controller->$method($context, $context->dispatch_rule->{args});
+        };
+        return $context->handle_500 if $@;
+        return $code if $context->is_finished;
+        return $context->render;
+    } else {
+        return $context->handle_404;
+    }
 }
 
 1;
