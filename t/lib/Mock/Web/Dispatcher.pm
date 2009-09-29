@@ -1,5 +1,4 @@
 package Mock::Web::Dispatcher;
-use Kamui;
 use Kamui::Web::Dispatcher;
 
 on '/' => run {

@@ -12,6 +12,8 @@ sub import {
     unshift @{"$caller\::ISA"}, 'Class::Data::Inheritable';
     $caller->mk_classdata('dispatch_table' => []);
     *{"$caller\::$_"} = *{$_} for qw/on run camelize_path determine TRUE FALSE/;
+
+    goto &Kamui::import;
 }
 
 sub on ($$)  { ## no critic.
