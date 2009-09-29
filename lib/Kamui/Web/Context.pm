@@ -6,14 +6,14 @@ use Encode;
 sub new {
     my $class = shift;
     bless {
-        _view => 'Kamui::View::TT',
+        _view => 'Kamui::View::TT', # default view
         @_
     }, $class;
 }
 
 sub req { $_[0]->{req} }
-sub app { $_[0]->{app} }
 sub dispatch_rule { $_[0]->{dispatch_rule} }
+
 sub view {
     my ($self, $view) = @_;
 
@@ -38,7 +38,7 @@ sub render {
     $self->view->render($self);
 }
 
-sub is_redirect { $_[0]->{is_redirect} }
+sub is_finished { $_[0]->{is_finished} }
 sub redirect {
     my ($self, $path, $params) = @_;
 
@@ -46,7 +46,7 @@ sub redirect {
     $params ||= +{};
     $uri->query_form(%{$params});
 
-    $self->{is_redirect} = 1;
+    $self->{is_finished} = 1;
     [ 302, [ 'Location' => $uri->as_string ], [''] ];
 }
 

@@ -16,7 +16,7 @@ sub dispatch {
             $code = $controller->$method($context, $context->dispatch_rule->{args});
         };
         return $context->handle_500 if $@;
-        return $code if $context->is_redirect;
+        return $code if $context->is_finished;
         return $context->render;
     } else {
         return $context->handle_404;
