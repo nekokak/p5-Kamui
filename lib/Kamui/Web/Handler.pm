@@ -2,7 +2,7 @@ package Kamui::Web::Handler;
 use Kamui;
 use Kamui::Web::Context;
 use Kamui::Web::Controller;
-use Plack::Request;
+use Kamui::Web::Request;
 use UNIVERSAL::require;
 
 sub import {
@@ -47,7 +47,7 @@ sub psgi_handler {
     sub {
         my $env = shift;
 
-        my $req  = Plack::Request->new($env);
+        my $req  = Kamui::Web::Request->new($env);
 
         $dispatcher ||= do {
             my $dispatch_class = join '::', $self->base_name, 'Web', 'Dispatcher';
