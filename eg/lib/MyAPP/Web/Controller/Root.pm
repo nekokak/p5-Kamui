@@ -24,6 +24,12 @@ sub dispatch_index {
     } else {
         $c->stash->{args} = $args->{p};
     }
+
+    if ($c->req->is_post_request) {
+        $c->stash->{method} = 'post';
+    } else {
+        $c->stash->{method} = 'get';
+    }
 }
 
 sub dispatch_json {
