@@ -9,7 +9,7 @@ my $c = Kamui::Web::Context->new;
 
 describe 'hook test' => run {
     test 'register_hook' => run {
-        Mock::Web::Controller::HookTest->call_hook('before_dispatch' => $c);
+        Mock::Web::Controller::HookTest->call_trigger('before_dispatch' => $c);
         is $c->stash->{before_dispatch_hook}, 'called';
     };
 };

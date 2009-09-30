@@ -1,5 +1,5 @@
 package Mock::Web::Controller::Root;
-use Kamui::Web::Controller;
+use Kamui::Web::Controller -base;
 
 sub dispatch_index {
     my ($class, $c, $args) = @_;
