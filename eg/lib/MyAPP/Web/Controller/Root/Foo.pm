@@ -1,17 +1,10 @@
-package MyAPP::Web::Controller::Root;
-use Kamui::Web::Controller -base;
+package MyAPP::Web::Controller::Root::Foo;
+use MyAPP::Web::Controller::Root -base;
 
 __PACKAGE__->add_trigger(
     'before_dispatch' => sub{
         my ($class, $c) = @_;
-        $c->stash->{before_dispatch} = 'before_dispatch_ok';
-    },
-);
-
-__PACKAGE__->add_trigger(
-    'after_dispatch' => sub{
-        my ($class, $c) = @_;
-        $c->stash->{after_dispatch} = 'after_dispatch_ok';
+        $c->stash->{before_dispatch} = 'before_dispatch_ok foo_class';
     },
 );
 
@@ -24,12 +17,6 @@ sub dispatch_index {
     } else {
         $c->stash->{args} = $args->{p};
     }
-}
-
-sub dispatch_json {
-    my ($class, $c) = @_;
-    $c->stash->{json} = +{name => 'nekokak'};
-    $c->view('JSON');
 }
 
 1;

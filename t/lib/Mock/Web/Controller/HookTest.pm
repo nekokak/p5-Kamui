@@ -1,9 +1,9 @@
 package Mock::Web::Controller::HookTest;
-use Kamui::Web::Controller;
+use Kamui::Web::Controller -base;
 
-register_hook(
+__PACKAGE__->add_trigger(
     'before_dispatch' => sub {
-        my $c = shift;
+        my ($class, $c) = @_;
         $c->stash->{before_dispatch_hook} = 'called';
     },
 );

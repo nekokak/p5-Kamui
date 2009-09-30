@@ -72,18 +72,27 @@ sub dispatch {
     my $context = shift;
 
     my $controller = $context->dispatch_rule->{controller};
-    $controller->use or return $context->handle_404;
-    my $action = $context->dispatch_rule->{action} or return $context->handle_404;
-    my $method = 'dispatch_'.$action;
+    $controller->use or do {
+        warn $@;
+        return $context->handle_404;
+    };
+    my $action = $context->dispatch_rule->{action} or do {
+        warn $@;
+        return $context->handle_404;
+    };
 
+    my $method = 'dispatch_'.$action;
     if ($controller->can($method)) {
         my $code;
         eval {
-            $controller->call_hook('before_dispatch', $context);
+            $controller->call_trigger('before_dispatch', $context);
             $code = $controller->$method($context, $context->dispatch_rule->{args});
-            $controller->call_hook('after_dispatch', $context);
+            $controller->call_trigger('after_dispatch', $context);
         };
-        return $context->handle_500 if $@;
+        if ($@) {
+            warn $@;
+            return $context->handle_500;
+        }
         return $code if $context->is_finished;
         return $context->render;
     } else {

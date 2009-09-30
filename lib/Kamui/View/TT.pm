@@ -39,7 +39,8 @@ sub render {
 
 sub guess_filename {
     my ($class, $context) = @_;
-    (my $controller = $context->dispatch_rule->{controller}) =~ s/.+Controller::(.+)$/$1/i;
+    (my $controller = $context->dispatch_rule->{controller}) =~ s/.+Controller::(.+)$/decamelize($1)/ie;
+    $controller = join '/', split '::', $controller;
     sprintf('%s/%s.html', decamelize($controller), $context->dispatch_rule->{action} );
 }
 
