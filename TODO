@@ -1,8 +1,9 @@
 todo:
-
-Viewのフィルタ
-testなさ過ぎ
-HookPoint考える
-
-containerの部分の書かせ方
+- Viewのフィルタ
+-- Plack::Middlewareでやるのか
+-- Kamui側でfilter用のHookポイントを用意してやるのか
+- testなさ過ぎ
+- containerの部分の書かせ方
+- Pluginどうするか
+-- contextにmethodはえるのでいいよね
 

@@ -9,17 +9,12 @@ sub import {
     my $caller = caller;
 
     my $pkg = caller(0);
-    for my $meth ( qw/new psgi_handler use_container dispatcher view/ ) {
+    for my $meth ( qw/new psgi_handler use_container use_context dispatcher view use_plugins/ ) {
         no strict 'refs';
         *{"$pkg\::$meth"} = \&$meth;
     }
 
     goto &Kamui::import;
-}
-
-sub new {
-    my $class = shift;
-    bless {}, $class;
 }
 
 my $dispatcher;
@@ -41,6 +36,51 @@ sub use_container($) { ## no critic.
     $container->use or die $@;
 }
 
+my $context_class;
+sub use_context ($) { ## no critic.
+    my $pkg = shift;
+    $pkg->use or die $@;
+    $context_class = $pkg;
+}
+
+=pod
+use_plugins [
+    'Plugin1',
+    +{
+        Plugin2 => +{conf =>'desu'},
+    },
+    'Plugin3',
+];
+=cut
+my $plugins = [];
+sub use_plugins ($) { ## no critic.
+    my $opts = shift;
+
+    for my $plugin (@$opts) {
+    warn $plugin;
+        my $pkg  = undef;
+        my $conf = undef;
+        if (ref $plugin eq 'HASH') {
+            ($pkg, $conf) = each %$plugin;
+        } else {
+            $pkg = $plugin;
+        }
+        push @{$plugins}, +{
+            pkg  => $pkg,
+            conf => $conf,
+        };
+    }
+}
+
+sub new {
+    my $class = shift;
+
+    $context_class ||= 'Kamui::Web::Context';
+    $context_class->load_plugins($plugins);
+
+    bless {}, $class;
+}
+
 sub psgi_handler {
     my $self = shift;
 
@@ -57,7 +97,7 @@ sub psgi_handler {
         $dispatcher->determine($req);
         my $rule = $dispatcher->determine($req);
 
-        my $context = Kamui::Web::Context->new(
+        my $context = $context_class->new(
             req           => $req,
             dispatch_rule => $rule,
             view          => $view || 'Kamui::View::TT',

@@ -3,11 +3,33 @@ use Kamui;
 use URI;
 use Encode;
 
+sub load_plugins {
+    my ($class, $plugins) = @_;
+
+    for my $plugin (@{$plugins}) {
+        my $pkg = $plugin->{pkg};
+        $pkg = $class . "::$pkg" unless $pkg =~ s/^\+//;
+        $class->load_class($pkg);
+
+        my $register_methods = $pkg->register_method;
+        while (my($method, $code) = each %{ $register_methods }) {
+            no strict 'refs';
+            *{"$class\::$method"} = sub {
+                my $self = shift;
+                $code->($self, $plugin->{conf});
+            };
+        }
+    }
+}
+
 sub new {
     my $class = shift;
     bless {
         @_
     }, $class;
+}
+
+sub plugin {
 }
 
 sub req { $_[0]->{req} }
