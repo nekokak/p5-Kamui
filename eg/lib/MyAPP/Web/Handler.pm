@@ -3,10 +3,9 @@ use Kamui::Web::Handler;
 
 use_container 'MyAPP::Container';
 use_plugins [qw/+MyAPP::Plugin::Foo/];
-
-#use_context 'MyAPP::Web::Context';
-#view 'Kamui::View::TT';
-#dispatcher 'MyAPP::Web::Dispatcher';
+use_context 'MyAPP::Web::Context';
+use_view 'Kamui::View::TT';
+use_dispatcher 'MyAPP::Web::Dispatcher';
 
 1;
 

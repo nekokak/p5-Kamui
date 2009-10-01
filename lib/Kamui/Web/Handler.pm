@@ -9,7 +9,11 @@ sub import {
     my $caller = caller;
 
     my $pkg = caller(0);
-    for my $meth ( qw/new psgi_handler use_container use_context dispatcher view use_plugins/ ) {
+    my @methods = qw/
+        new setup handler dispatcher
+        use_container use_context use_dispatcher use_view use_plugins
+    /;
+    for my $meth ( @methods ) {
         no strict 'refs';
         *{"$pkg\::$meth"} = \&$meth;
     }
@@ -18,14 +22,15 @@ sub import {
 }
 
 my $dispatcher;
-sub dispatcher ($) { ## no critic.
+sub dispatcher { $dispatcher }
+sub use_dispatcher ($) { ## no critic.
     my $pkg = shift;
     $pkg->use or die $@;
     $dispatcher = $pkg;
 }
 
 my $view;
-sub view ($) { ## no critic.
+sub use_view ($) { ## no critic.
     my $pkg = shift;
     $pkg->use or die;
     $view = $pkg;
@@ -81,7 +86,19 @@ sub new {
     bless {}, $class;
 }
 
-sub psgi_handler {
+
+sub setup {
+    my $self = shift;
+
+    $dispatcher ||= do {
+        my $dispatch_class = join '::', $self->base_name, 'Web', 'Dispatcher';
+        dispatcher($dispatch_class);
+    };
+
+    $self;
+}
+
+sub handler {
     my $self = shift;
 
     sub {
@@ -89,13 +106,7 @@ sub psgi_handler {
 
         my $req  = Kamui::Web::Request->new($env);
 
-        $dispatcher ||= do {
-            my $dispatch_class = join '::', $self->base_name, 'Web', 'Dispatcher';
-            dispatcher($dispatch_class);
-        };
-
-        $dispatcher->determine($req);
-        my $rule = $dispatcher->determine($req);
+        my $rule = $self->dispatcher->determine($req);
 
         my $context = $context_class->new(
             req           => $req,
