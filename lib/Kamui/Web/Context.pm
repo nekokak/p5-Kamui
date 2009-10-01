@@ -2,6 +2,7 @@ package Kamui::Web::Context;
 use Kamui;
 use URI;
 use Encode;
+use Carp ();
 
 sub load_plugins {
     my ($class, $plugins) = @_;
@@ -25,6 +26,7 @@ sub load_plugins {
 sub new {
     my $class = shift;
     bless {
+        filters => [],
         @_
     }, $class;
 }
@@ -57,6 +59,28 @@ sub render {
 
     $self->load_class($self->view);
     $self->view->render($self);
+    my $res = $self->view->render($self);
+
+    $self->output_filter($res);
+}
+
+sub output_filter {
+    my ($self, $res) = @_;
+
+    for my $filter (@{$self->{filters}}) {
+        $res = $filter->($self, $res);
+    }
+
+    return $res;
+}
+
+sub add_filter {
+    my($self, $code) = @_;
+
+    unless (ref($code) eq 'CODE') {
+        Carp::croak("add_filter() needs coderef");
+    }
+    push @{$self->{filters}}, $code;
 }
 
 sub is_finished { $_[0]->{is_finished} }
