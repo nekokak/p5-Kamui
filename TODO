@@ -1,7 +1,5 @@
 todo:
-- Viewのフィルタ
--- Plack::Middlewareでやるのか
--- Kamui側でfilter用のHookポイントを用意してやるのか
+
 - testなさ過ぎ
 - containerの部分の書かせ方
 - Pluginどうするか
