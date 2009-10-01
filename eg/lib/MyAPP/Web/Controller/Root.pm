@@ -25,7 +25,7 @@ sub dispatch_index {
         $c->stash->{args} = $args->{p};
     }
 
-    $c->foo; # call plugin method;
+    $c->foo->call; # call plugin method;
 
     if ($c->req->is_post_request) {
         $c->stash->{method} = 'post';

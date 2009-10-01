@@ -48,33 +48,10 @@ sub use_context ($) { ## no critic.
     $context_class = $pkg;
 }
 
-=pod
-use_plugins [
-    'Plugin1',
-    +{
-        Plugin2 => +{conf =>'desu'},
-    },
-    'Plugin3',
-];
-=cut
 my $plugins = [];
 sub use_plugins ($) { ## no critic.
-    my $opts = shift;
-
-    for my $plugin (@$opts) {
-    warn $plugin;
-        my $pkg  = undef;
-        my $conf = undef;
-        if (ref $plugin eq 'HASH') {
-            ($pkg, $conf) = each %$plugin;
-        } else {
-            $pkg = $plugin;
-        }
-        push @{$plugins}, +{
-            pkg  => $pkg,
-            conf => $conf,
-        };
-    }
+    my $pkgs = shift;
+    $plugins = $pkgs;
 }
 
 sub new {

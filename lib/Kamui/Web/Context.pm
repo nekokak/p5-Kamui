@@ -8,17 +8,20 @@ sub load_plugins {
     my ($class, $plugins) = @_;
 
     for my $plugin (@{$plugins}) {
-        my $pkg = $plugin->{pkg};
-        $pkg = $class . "::$pkg" unless $pkg =~ s/^\+//;
+        my $pkg = $plugin;
+        $pkg = _plugin_name($pkg);
         $class->load_class($pkg);
 
         my $register_methods = $pkg->register_method;
-        while (my($method, $code) = each %{ $register_methods }) {
-            no strict 'refs';
-            *{"$class\::$method"} = sub {
+        while (my($method, $initialize_code) = each %{ $register_methods }) {
+
+            my $code = sub {
                 my $self = shift;
-                $code->($self, $plugin->{conf});
+                $self->{_plugin}->{$method} ||= $initialize_code->($self);
             };
+
+            no strict 'refs';
+            *{"$class\::$method"} = $code;
         }
     }
 }
@@ -31,7 +34,10 @@ sub new {
     }, $class;
 }
 
-sub plugin {
+sub _plugin_name {
+    my $pkg = shift;
+    $pkg = 'Kamui::Plugin::'.$pkg unless $pkg =~ s/^\+//;
+    return $pkg;
 }
 
 sub req { $_[0]->{req} }

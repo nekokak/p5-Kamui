@@ -5,22 +5,22 @@ sub register_method {
     +{
         foo => sub {
             my $c = shift;
-            $c->stash->{plugin_foo} = 'call foo';
+            MyAPP::Foo->new($c);
         },
     };
 }
 
-1;
+package MyAPP::Foo;
+sub new {
+    my ($class, $c) = @_;
+    bless {c => $c}, $class;
+}
 
-__END__
-sub foo {
-    my ($self, $c) = @_;
-    $c->stash->{plugin_foo} = 'call foo';
+sub c { $_[0]->{c} }
+sub call {
+    my $self = shift;
+    $self->c->stash->{plugin_foo} = 'called';
 }
 
 1;
 
-__END__
-
-
-$c->plugin('session')->hoo;
