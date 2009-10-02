@@ -2,6 +2,7 @@ package Kamui;
 use strict;
 use warnings;
 use utf8;
+use UNIVERSAL::require;
 
 sub import {
     strict->import;

@@ -8,8 +8,7 @@ sub load_plugins {
     my ($class, $plugins) = @_;
 
     for my $plugin (@{$plugins}) {
-        my $pkg = $plugin;
-        $pkg = _plugin_name($pkg);
+        my $pkg = _plugin_name($plugin);
         $class->load_class($pkg);
 
         my $register_methods = $pkg->register_method;
