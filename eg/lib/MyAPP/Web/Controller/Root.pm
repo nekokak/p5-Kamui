@@ -1,5 +1,6 @@
 package MyAPP::Web::Controller::Root;
 use Kamui::Web::Controller -base;
+use HTTP::MobileAttribute plugins => [qw/IS/];
 
 __PACKAGE__->add_trigger(
     'before_dispatch' => sub{
@@ -26,6 +27,14 @@ sub dispatch_index {
     }
 
     $c->foo->call; # call plugin method;
+
+    if ( $c->mobile_attribute->is_non_mobile ) {
+        $c->stash->{agent} = 'pc';
+    } else {
+        if ($c->mobile_attribute->is_ezweb) {
+            $c->stash->{agent} = 'ez';
+        }
+    }
 
     if ($c->req->is_post_request) {
         $c->stash->{method} = 'post';
