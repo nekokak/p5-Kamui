@@ -3,6 +3,7 @@ use Kamui;
 use URI;
 use Encode;
 use Carp ();
+use HTML::FillInForm::Lite;
 
 sub load_plugins {
     my ($class, $plugins) = @_;
@@ -28,7 +29,8 @@ sub load_plugins {
 sub new {
     my $class = shift;
     bless {
-        filters => [],
+        _filters      => [],
+        _fillin_fdat => undef,
         @_
     }, $class;
 }
@@ -41,6 +43,12 @@ sub _plugin_name {
 
 sub req { $_[0]->{req} }
 sub dispatch_rule { $_[0]->{dispatch_rule} }
+
+sub fillin_fdat {
+    my ($self, $val) = @_;
+    $self->{fillin_fdat} = $val if $val;
+    $self->{fillin_fdat};
+}
 
 sub view {
     my ($self, $view) = @_;
@@ -66,17 +74,29 @@ sub render {
     $self->view->render($self);
     my $res = $self->view->render($self);
 
-    $self->output_filter($res);
+    $res = $self->fillin_form($res);
+    $res = $self->output_filter($res);
+    $res;
+}
+
+sub fillin_form {
+    my ($self, $res) = @_;
+
+    my $fdat = $self->fillin_fdat;
+    return $res unless $fdat;
+
+    $res->[2]->[0] = HTML::FillInForm::Lite->fill(\$res->[2]->[0], $fdat);
+    $res;
 }
 
 sub output_filter {
     my ($self, $res) = @_;
 
-    for my $filter (@{$self->{filters}}) {
+    for my $filter (@{$self->{_filters}}) {
         $res = $filter->($self, $res);
     }
 
-    return $res;
+    $res;
 }
 
 sub add_filter {
@@ -85,7 +105,7 @@ sub add_filter {
     unless (ref($code) eq 'CODE') {
         Carp::croak("add_filter() needs coderef");
     }
-    push @{$self->{filters}}, $code;
+    push @{$self->{_filters}}, $code;
 }
 
 sub is_finished { $_[0]->{is_finished} }

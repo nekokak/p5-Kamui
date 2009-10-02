@@ -29,6 +29,7 @@ sub dispatch_index {
 
     if ($c->req->is_post_request) {
         $c->stash->{method} = 'post';
+        $c->fillin_fdat({name => 'nekokak'});
     } else {
         $c->stash->{method} = 'get';
     }
