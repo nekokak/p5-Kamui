@@ -90,6 +90,7 @@ sub handler {
             dispatch_rule => $rule,
             view          => $view || 'Kamui::View::TT',
             conf          => container('conf'),
+            app           => $self,
         );
 
         return dispatch($context);

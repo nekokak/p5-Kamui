@@ -53,8 +53,6 @@ describe 'handler tests' => run {
         ];
     };
 
-        QUERY_STRING   => 'p=q',
-
     test 'query test' => run {
         my $env = +{
             REQUEST_METHOD    => 'GET',

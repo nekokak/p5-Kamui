@@ -4,6 +4,8 @@ use URI;
 use Encode;
 use Carp ();
 use HTML::FillInForm::Lite;
+use FormValidator::Lite;
+use String::CamelCase qw/camelize/;
 
 sub load_plugins {
     my ($class, $plugins) = @_;
@@ -29,7 +31,8 @@ sub load_plugins {
 sub new {
     my $class = shift;
     bless {
-        _filters      => [],
+        app          => undef, # set application class.
+        _filters     => [],
         _fillin_fdat => undef,
         @_
     }, $class;
@@ -41,6 +44,7 @@ sub _plugin_name {
     return $pkg;
 }
 
+sub app { $_[0]->{app} }
 sub req { $_[0]->{req} }
 sub dispatch_rule { $_[0]->{dispatch_rule} }
 
@@ -106,6 +110,23 @@ sub add_filter {
         Carp::croak("add_filter() needs coderef");
     }
     push @{$self->{_filters}}, $code;
+}
+
+
+sub validator {
+    my ($self, $valid_class_s) = @_;
+
+    my $valid_class = join '::', $self->app->base_name, 'Web', 'Validator', camelize($valid_class_s);
+    $self->load_class($valid_class);
+
+    my $validator = $valid_class->new(
+        engine  => FormValidator::Lite->new($self->req),
+        context => $self,
+    );
+
+    $validator->{engine}->set_message_data($self->conf->{'validator_message'});
+
+    return $validator;
 }
 
 sub is_finished { $_[0]->{is_finished} }

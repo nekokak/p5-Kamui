@@ -1,3 +1,4 @@
+use Kamui;
 use MyAPP::Container;
 use Path::Class;
 
@@ -12,6 +13,17 @@ return +{
         json => +{
             stash_key      => 'json',
             callback_param => 'callback',
+        },
+    },
+    validator_message => +{
+        param => +{
+            age => '年齢',
+        },
+        function => +{
+            not_null => '[_1]が空です',
+        },
+        message => +{
+            'foo.bar' => 'fooがbarですね',
         },
     },
 };
