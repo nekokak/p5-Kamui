@@ -27,5 +27,12 @@ $conf->{validator_message} = +{
     },
 };
 
+use HTTP::Session::Store::OnMemory;
+use HTTP::Session::State::Null;
+$conf->{plugins}->{session} = +{
+    store => HTTP::Session::Store::OnMemory->new(),
+    state => HTTP::Session::State::Null->new(),
+};
+
 return $conf;
 
