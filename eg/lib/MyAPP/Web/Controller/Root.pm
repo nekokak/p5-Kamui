@@ -2,6 +2,8 @@ package MyAPP::Web::Controller::Root;
 use Kamui::Web::Controller -base;
 use HTTP::MobileAttribute plugins => [qw/IS/];
 
+__PACKAGE__->authorizer('+MyAPP::Web::Authorizer::BasicAuth');
+
 __PACKAGE__->add_trigger(
     'before_dispatch' => sub{
         my ($class, $c) = @_;
@@ -47,6 +49,9 @@ sub dispatch_index {
     } else {
         $c->stash->{method} = 'get';
     }
+}
+
+sub dispatch_moge : auth('Null') {
 }
 
 sub dispatch_json {

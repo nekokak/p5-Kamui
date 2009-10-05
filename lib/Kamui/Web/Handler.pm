@@ -10,7 +10,7 @@ sub import {
 
     my $pkg = caller(0);
     my @methods = qw/
-        new setup handler dispatcher
+        new setup handler dispatcher dispatch
         use_container use_context use_dispatcher use_view use_plugins
     /;
     for my $meth ( @methods ) {
@@ -93,12 +93,12 @@ sub handler {
             app           => $self,
         );
 
-        return dispatch($context);
+        return $self->dispatch($context);
     };
 }
 
 sub dispatch {
-    my $context = shift;
+    my ($self, $context) = @_;
 
     my $controller = $context->dispatch_rule->{controller};
     $controller->use or do {
@@ -111,7 +111,12 @@ sub dispatch {
     };
 
     my $method = 'dispatch_'.$action;
-    if ($controller->can($method)) {
+    if (my $dispatch_code = $controller->can($method)) {
+
+        if (my $not_authorized = $controller->authorize($dispatch_code, $context)) {
+            return $not_authorized;
+        }
+
         my $code;
         eval {
             $controller->call_trigger('before_dispatch', $context);
