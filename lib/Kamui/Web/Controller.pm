@@ -34,8 +34,9 @@ sub authorize {
         return $pkg->authorize($context);
     }
 
-    my $controller_auth = $class->_load_auth_class($class->authorizer);
+    my $controller_auth = $class->authorizer;
     if ($controller_auth) {
+        my $pkg = $class->_load_auth_class($controller_auth);
         return $controller_auth->authorize($context);
     }
     return;
