@@ -1,6 +1,9 @@
 use Kamui;
 use MyAPP::Container;
 use Path::Class;
+use HTML::Entities;
+use Encode;
+use URI::Escape;
 
 my $home = container('home');
 
@@ -9,6 +12,16 @@ return +{
         tt   => +{
             path    => $home->file('assets/tmpl')->stringify,
             options => '',
+            filters => +{
+                html_unescape => sub {
+                    HTML::Entities::decode_entities(shift);
+                },
+                uri => sub{
+                    Encode::is_utf8( $_[0] )
+                        ? URI::Escape::uri_escape_utf8($_[0])
+                        : URI::Escape::uri_escape($_[0]);
+                },
+            },
         },
         json => +{
             stash_key      => 'json',
@@ -27,3 +40,4 @@ return +{
         },
     },
 };
+

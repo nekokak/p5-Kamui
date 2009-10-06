@@ -4,7 +4,6 @@ use base 'Kamui::View';
 use Template;
 use File::Spec;
 use Template::Stash::EscapeHTML;
-use HTML::Entities;
 use String::CamelCase qw/decamelize/;
 use Encode;
 
@@ -18,9 +17,7 @@ sub render {
         RELATIVE     => 1,
         ENCODING     => 'utf-8',
         STASH        => Template::Stash::EscapeHTML->new,
-        FILTERS      => +{
-            html_unescape => sub { HTML::Entities::decode_entities(shift) },
-        },
+        FILTERS      => $context->conf->{view}->{tt}->{filters},
         COMPILE_DIR  => '/tmp/' . $ENV{USER} . "/",
         INCLUDE_PATH => [ '.', File::Spec->catfile($context->conf->{view}->{tt}->{path}) ],
         %{ $context->conf->{view}->{tt}->{options} || {} },
