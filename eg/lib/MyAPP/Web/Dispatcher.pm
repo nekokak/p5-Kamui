@@ -1,6 +1,10 @@
 package MyAPP::Web::Dispatcher;
 use Kamui::Web::Dispatcher;
 
+on '/(.+)/([^./]+)\.html' => run {
+    return camelize_path($1), $2, TRUE +{}, 
+};
+
 on '/' => run {
     return 'Root', 'index', FALSE, +{};
 };

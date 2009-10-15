@@ -111,6 +111,11 @@ sub dispatch {
     };
 
     my $method = 'dispatch_'.$action;
+    if ($context->dispatch_rule->{is_static}) {
+        no strict 'refs'; ## no critic.
+        *{"${controller}::${method}"} = sub { "empty" };
+    }
+
     if (my $dispatch_code = $controller->can($method)) {
 
         if (my $not_authorized = $controller->authorize($dispatch_code, $context)) {
