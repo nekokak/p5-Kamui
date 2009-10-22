@@ -35,10 +35,10 @@ sub camelize_path {
 }
 
 sub determine {
-    my ($class, $r) = @_;
+    my ($class, $env) = @_;
 
     for my $dispatch_rule (@{$class->dispatch_table}) {
-        if ($r->path =~ $dispatch_rule->{regexp}) {
+        if ($env->{PATH_INFO} =~ $dispatch_rule->{regexp}) {
             my ($controller, $page, $static, $args) = $dispatch_rule->{code}->();
             if ($controller) {
                 return +{

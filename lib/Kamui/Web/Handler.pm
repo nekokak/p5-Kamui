@@ -2,7 +2,6 @@ package Kamui::Web::Handler;
 use Kamui;
 use Kamui::Web::Context;
 use Kamui::Web::Controller;
-use Kamui::Web::Request;
 use UNIVERSAL::require;
 
 sub import {
@@ -81,12 +80,10 @@ sub handler {
     sub {
         my $env = shift;
 
-        my $req  = Kamui::Web::Request->new($env);
-
-        my $rule = $self->dispatcher->determine($req);
+        my $rule = $self->dispatcher->determine($env);
 
         my $context = $context_class->new(
-            req           => $req,
+            env           => $env,
             dispatch_rule => $rule,
             view          => $view || 'Kamui::View::TT',
             conf          => container('conf'),

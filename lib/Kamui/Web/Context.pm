@@ -45,7 +45,14 @@ sub _plugin_name {
 }
 
 sub app { $_[0]->{app} }
-sub req { $_[0]->{req} }
+sub req {
+    my $self = shift;
+    $self->{req} ||= do {
+        $self->app->load_class('Kamui::Web::Request');
+        Kamui::Web::Request->new($self->{env});
+    };
+}
+
 sub dispatch_rule { $_[0]->{dispatch_rule} }
 
 sub fillin_fdat {
