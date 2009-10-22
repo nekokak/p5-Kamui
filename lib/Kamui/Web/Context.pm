@@ -4,7 +4,7 @@ use Encode;
 use Carp ();
 use HTML::FillInForm::Lite;
 use FormValidator::Lite;
-use String::CamelCase qw/camelize/;
+use String::CamelCase qw/camelize decamelize/;
 
 sub load_plugins {
     my ($class, $plugins) = @_;
@@ -71,6 +71,14 @@ sub view {
 }
 
 sub load_template : lvalue { $_[0]->{load_template} }
+sub guess_filename {
+    my $self = shift;
+
+    (my $controller = $self->dispatch_rule->{controller}) =~ s/.+Controller::(.+)$/decamelize($1)/ie;
+    $controller = join '/', split '::', $controller;
+    sprintf('%s/%s.html', decamelize($controller), $self->dispatch_rule->{action} );
+}
+
 sub stash : lvalue {
     my $self = shift;
     $self->{_stash} ||= +{};
