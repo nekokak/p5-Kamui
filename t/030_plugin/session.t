@@ -2,6 +2,7 @@ use t::Utils;
 use Test::Declare;
 use Kamui::Web::Context;
 use Mock::Container;
+use Mock::Web::Handler;
 
 plan tests => blocks;
 
@@ -15,10 +16,10 @@ describe 'plugin tests' => run {
             SCRIPT_NAME    => '/',
             QUERY_STRING   => 'p=query',
         };
-        my $r = req($env);
 
         my $c = Kamui::Web::Context->new(
-            req  => $r,
+            env  => $env,
+            app  => 'Mock::Web::Handler',
             conf => container('conf'),
         );
         isa_ok $c->session, 'HTTP::Session';

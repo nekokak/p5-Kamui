@@ -8,7 +8,6 @@ plan tests => blocks;
 describe 'fillin tests' => run {
     test 'fillin form' => run {
         my $c = Kamui::Web::Context->new(
-            req => sub {},
             dispatch_rule => {
                 controller => 'Mock::Web::Controller::Root',
                 action     => 'fillin',
@@ -16,7 +15,7 @@ describe 'fillin tests' => run {
                 args       => {},
             },
             view => 'Kamui::View::TT',
-            conf          => container('conf'),
+            conf => container('conf'),
         );
         $c->fillin_fdat({name => 'nekokak'});
         my $out = $c->render;

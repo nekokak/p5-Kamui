@@ -13,10 +13,9 @@ describe 'validation tests' => run {
             SCRIPT_NAME    => '/',
             QUERY_STRING   => 'p=query',
         };
-        my $r = req($env);
 
         my $c = Kamui::Web::Context->new(
-            req => $r,
+            env => $env,
             dispatch_rule => {
                 controller => 'Mock::Web::Controller::Root',
                 action     => 'validator',

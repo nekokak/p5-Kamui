@@ -8,7 +8,6 @@ plan tests => blocks;
 describe 'filter tests' => run {
     test 'html filter' => run {
         my $c = Kamui::Web::Context->new(
-            req => sub {},
             dispatch_rule => {
                 controller => 'Mock::Web::Controller::Root',
                 action     => 'filter',
@@ -16,7 +15,7 @@ describe 'filter tests' => run {
                 args       => {},
             },
             view => 'Kamui::View::TT',
-            conf          => container('conf'),
+            conf => container('conf'),
         );
 
         $c->add_filter(sub {
