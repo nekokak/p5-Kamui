@@ -18,7 +18,7 @@ __PACKAGE__->add_trigger(
     },
 );
 
-sub dispatch_index {
+sub do_index {
     my ($class, $c, $args) = @_;
     $c->stash->{nick} = $c->req->param('nick') || 'nekokak';
     $c->stash->{name} = 'コバヤシアツシ';
@@ -51,10 +51,10 @@ sub dispatch_index {
     }
 }
 
-sub dispatch_moge : auth('Null') {
+sub do_moge : auth('Null') {
 }
 
-sub dispatch_json {
+sub do_json {
     my ($class, $c) = @_;
     $c->stash->{json} = +{name => 'nekokak'};
     $c->view('JSON');

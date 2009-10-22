@@ -107,7 +107,7 @@ sub dispatch {
         return $context->handle_404;
     };
 
-    my $method = 'dispatch_'.$action;
+    my $method = 'do_'.$action;
     if ($context->dispatch_rule->{is_static}) {
         no strict 'refs'; ## no critic.
         *{"${controller}::${method}"} = sub { "empty" };
