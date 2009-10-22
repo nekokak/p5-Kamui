@@ -7,12 +7,12 @@ plan tests => blocks;
 describe 'dispatcher tests' => run {
     test 'maping' => run {
         my $env = +{
-            REQUEST_METHOD    => 'GET',
-            SCRIPT_NAME       => '/',
+            REQUEST_METHOD => 'GET',
+            SCRIPT_NAME    => '/',
+            PATH_INFO      => '/',
         };
-        my $r = req($env);
 
-        my $map = Mock::Web::Dispatcher->determine($r);
+        my $map = Mock::Web::Dispatcher->determine($env);
         is_deeply $map, {
             controller => 'Mock::Web::Controller::Root',
             action     => 'index',
@@ -22,12 +22,12 @@ describe 'dispatcher tests' => run {
     };
     test 'maping' => run {
         my $env = +{
-            REQUEST_METHOD    => 'GET',
-            SCRIPT_NAME       => '/foo',
+            REQUEST_METHOD => 'GET',
+            SCRIPT_NAME    => '/foo',
+            PATH_INFO      => '/foo',
         };
-        my $r = req($env);
 
-        my $map = Mock::Web::Dispatcher->determine($r);
+        my $map = Mock::Web::Dispatcher->determine($env);
         is_deeply $map, {
             controller => 'Mock::Web::Controller::Root',
             action     => 'index',

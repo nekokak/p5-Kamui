@@ -4,7 +4,9 @@ use Mock::Web::Handler;
 
 plan tests => blocks;
 
-my $psgi_handler = Mock::Web::Handler->new->psgi_handler;
+my $app = Mock::Web::Handler->new;
+$app->setup;
+my $psgi_handler = $app->handler;
 
 describe 'handler tests' => run {
     test 'simple handler test' => run {
@@ -14,6 +16,7 @@ describe 'handler tests' => run {
             SERVER_PORT       => 80,
             SERVER_NAME       => 'example.com',
             SCRIPT_NAME       => '/handler_base_test',
+            PATH_INFO         => '/handler_base_test',
             REMOTE_ADDR       => '127.0.0.1',
         };
         my $out = $psgi_handler->($env);
@@ -37,6 +40,7 @@ describe 'handler tests' => run {
             SERVER_PORT       => 80,
             SERVER_NAME       => 'example.com',
             SCRIPT_NAME       => '/args_test',
+            PATH_INFO         => '/args_test',
             REMOTE_ADDR       => '127.0.0.1',
         };
         my $out = $psgi_handler->($env);
@@ -60,6 +64,7 @@ describe 'handler tests' => run {
             SERVER_PORT       => 80,
             SERVER_NAME       => 'example.com',
             SCRIPT_NAME       => '/query_test/',
+            PATH_INFO         => '/query_test/',
             REMOTE_ADDR       => '127.0.0.1',
             QUERY_STRING      => 'p=query',
         };

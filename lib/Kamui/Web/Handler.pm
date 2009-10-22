@@ -66,9 +66,9 @@ sub new {
 sub setup {
     my $self = shift;
 
-    $dispatcher ||= do {
+    $dispatcher || do {
         my $dispatch_class = join '::', $self->base_name, 'Web', 'Dispatcher';
-        dispatcher($dispatch_class);
+        use_dispatcher($dispatch_class);
     };
 
     $self;

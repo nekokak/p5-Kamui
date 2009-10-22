@@ -1,6 +1,6 @@
 package Kamui::Web::Context;
 use Kamui;
-use URI;
+#use URI;
 use Encode;
 use Carp ();
 use HTML::FillInForm::Lite;
@@ -140,12 +140,29 @@ sub is_finished { $_[0]->{is_finished} }
 sub redirect {
     my ($self, $path, $params) = @_;
 
+    $self->app->load_class('URI');
+
     my $uri = URI->new($path);
     $params ||= +{};
     $uri->query_form(%{$params});
 
     $self->{is_finished} = 1;
     [ 302, [ 'Location' => $uri->as_string ], [''] ];
+}
+
+sub uri_with {
+    my ($self, @path) = @_;
+
+    $self->app->load_class('URI::WithBase');
+
+    my $params = ref $path[-1] eq 'HASH' ? pop @path : {};
+
+    (my $path = join '/', @path) =~ s!/{2,}!/!g;
+    $path =~ s!^/+!!;
+    my $uri = URI::WithBase->new($path, $self->req->base);
+    $uri->query_form($params);
+
+    $uri->abs;
 }
 
 sub handle_404 {
