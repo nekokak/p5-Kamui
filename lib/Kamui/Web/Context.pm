@@ -1,6 +1,5 @@
 package Kamui::Web::Context;
 use Kamui;
-#use URI;
 use Encode;
 use Carp ();
 use HTML::FillInForm::Lite;
