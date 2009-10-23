@@ -30,7 +30,11 @@ sub render {
         \my $output
     ) or die $@;
 
-    return [ 200, [ 'Content-Type' => 'text/html' ], [Encode::encode('utf8',$output)] ];
+    my $res = $context->res;
+    $res->status('200');
+    $res->body(Encode::encode('utf8',$output));
+    $res->headers([ 'Content-Type' => 'text/html' ]);
+    $res;
 }
 
 1;

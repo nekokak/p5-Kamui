@@ -1,6 +1,5 @@
 package Kamui::Web::Context;
 use Kamui;
-use Encode;
 use Carp ();
 use HTML::FillInForm::Lite;
 use String::CamelCase qw/camelize decamelize/;
@@ -48,6 +47,13 @@ sub req {
     $self->{req} ||= do {
         $self->app->load_class('Kamui::Web::Request');
         Kamui::Web::Request->new($self->{env});
+    };
+}
+sub res {
+    my $self = shift;
+    $self->{res} ||= do {
+        $self->app->load_class('Kamui::Web::Response');
+        Kamui::Web::Response->new;
     };
 }
 
@@ -102,7 +108,10 @@ sub fillin_form {
     my $fdat = $self->fillin_fdat;
     return $res unless $fdat;
 
-    $res->[2]->[0] = HTML::FillInForm::Lite->fill(\$res->[2]->[0], $fdat);
+    my $body = $res->body;
+    $res->body(
+        HTML::FillInForm::Lite->fill(\$body, $fdat)
+    );
     $res;
 }
 
@@ -136,7 +145,10 @@ sub redirect {
     $uri->query_form(%{$params});
 
     $self->{is_finished} = 1;
-    [ 302, [ 'Location' => $uri->as_string ], [''] ];
+
+    my $res = $self->res;
+    $res->redirect($uri->as_string);
+    $res;
 }
 
 sub uri_with {
@@ -171,17 +183,25 @@ sub finalize_plugins {
 }
 
 sub handle_404 {
-    [
-        404, [ "Content-Type" => "text/plain", "Content-Length" => 13 ],
-        ["404 Not Found"]
-    ];
+    my $self = shift;
+
+    my $res = $self->res;
+    $res->status('404');
+    $res->headers([ 'Content-Type' => 'text/plain', 'Content-Length' => 13 ]);
+    $res->body('404 Not Found');
+
+    $res;
 }
 
 sub handle_500 {
-    [
-        500, [ "Content-Type" => "text/plain", "Content-Length" => 21 ],
-        ["Internal Server Error"]
-    ];
+    my $self = shift;
+
+    my $res = $self->res;
+    $res->status('500');
+    $res->headers([ 'Content-Type' => 'text/plain', 'Content-Length' => 21 ]);
+    $res->body('Internal Server Error');
+
+    $res;
 }
 
 1;

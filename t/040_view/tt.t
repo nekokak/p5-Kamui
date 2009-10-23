@@ -6,12 +6,12 @@ use Mock::Web::Handler;
 
 plan tests => blocks;
 
-describe 'filter tests' => run {
-    test 'html filter' => run {
+describe 'view tt tests' => run {
+    test 'render' => run {
         my $c = Kamui::Web::Context->new(
             dispatch_rule => {
                 controller => 'Mock::Web::Controller::Root',
-                action     => 'filter',
+                action     => 'fillin',
                 is_static  => 0,
                 args       => {},
             },
@@ -19,17 +19,10 @@ describe 'filter tests' => run {
             view => 'Kamui::View::TT',
             conf => container('conf'),
         );
-
-        $c->add_filter(sub {
-            my ($context, $res) = @_;
-            (my $body = $res->body) =~ s/not //;
-            $res->body($body);
-            $res;
-        });
         my $res = $c->render;
         isa_ok $res, 'Kamui::Web::Response';
         is $res->status, 200;
-        is $res->body, "filter is ok\n";
+        is $res->body, 'my name is <input type="text" name="name" value="" />.' . "\n";
     };
 };
 

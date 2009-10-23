@@ -19,18 +19,11 @@ describe 'handler tests' => run {
             PATH_INFO         => '/handler_base_test',
             REMOTE_ADDR       => '127.0.0.1',
         };
-        my $out = $psgi_handler->($env);
-        is_deeply $out,[
-            200,
-            [
-              'Content-Type',
-              'text/html'
-            ],
-            [
-              'handler_base_test is ok
-'
-            ]
-        ];
+        my $res = $psgi_handler->($env);
+        isa_ok $res, 'Kamui::Web::Response';
+        is $res->status, 200;
+        is $res->content_type, 'text/html';
+        is $res->body, "handler_base_test is ok\n";
     };
 
     test 'args test' => run {
@@ -43,18 +36,11 @@ describe 'handler tests' => run {
             PATH_INFO         => '/args_test',
             REMOTE_ADDR       => '127.0.0.1',
         };
-        my $out = $psgi_handler->($env);
-        is_deeply $out,[
-            200,
-            [
-              'Content-Type',
-              'text/html'
-            ],
-            [
-              'args_test is ok
-'
-            ]
-        ];
+        my $res = $psgi_handler->($env);
+        isa_ok $res, 'Kamui::Web::Response';
+        is $res->status, 200;
+        is $res->content_type, 'text/html';
+        is $res->body, "args_test is ok\n";
     };
 
     test 'query test' => run {
@@ -68,19 +54,11 @@ describe 'handler tests' => run {
             REMOTE_ADDR       => '127.0.0.1',
             QUERY_STRING      => 'p=query',
         };
-        my $out = $psgi_handler->($env);
-        is_deeply $out,[
-            200,
-            [
-              'Content-Type',
-              'text/html'
-            ],
-            [
-              'query is ok
-'
-            ]
-        ];
+        my $res = $psgi_handler->($env);
+        isa_ok $res, 'Kamui::Web::Response';
+        is $res->status, 200;
+        is $res->content_type, 'text/html';
+        is $res->body, "query is ok\n";
     };
-
 };
 

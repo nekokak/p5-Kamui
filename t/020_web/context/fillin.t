@@ -2,6 +2,7 @@ use t::Utils;
 use Test::Declare;
 use Kamui::Web::Context;
 use Mock::Container;
+use Mock::Web::Handler;
 
 plan tests => blocks;
 
@@ -14,22 +15,15 @@ describe 'fillin tests' => run {
                 is_static  => 0,
                 args       => {},
             },
+            app  => 'Mock::Web::Handler',
             view => 'Kamui::View::TT',
             conf => container('conf'),
         );
         $c->fillin_fdat({name => 'nekokak'});
-        my $out = $c->render;
-        chomp $out->[2]->[0];
-        is_deeply $out,  [
-          200,
-          [
-            'Content-Type',
-            'text/html'
-          ],
-          [
-            'my name is <input type="text" name="name" value="nekokak" />.'
-          ]
-        ];
+        my $res = $c->render;
+        isa_ok $res, 'Kamui::Web::Response';
+        is $res->status, 200;
+        is $res->body, 'my name is <input type="text" name="name" value="nekokak" />.' . "\n";
     };
 };
 
