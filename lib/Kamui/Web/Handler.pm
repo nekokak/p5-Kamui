@@ -92,7 +92,7 @@ sub handler {
 
         my $response = $self->dispatch($context);
         $context->finalize($response);
-        $response;
+        $response->finalize;
     };
 }
 
@@ -121,17 +121,19 @@ sub dispatch {
             return $not_authorized;
         }
 
-        my $code;
+        my $res;
         eval {
             $controller->call_trigger('before_dispatch', $context);
-            $code = $controller->$method($context, $context->dispatch_rule->{args});
+            $res = $controller->$method($context, $context->dispatch_rule->{args});
             $controller->call_trigger('after_dispatch', $context);
         };
-        if ($@) {
+        if ( $context->is_detach($@) ) {
+            return $context->res;
+        } elsif($@) {
             warn $@;
             return $context->handle_500;
         }
-        return $code if $context->is_finished;
+        return $res if $context->is_finished;
         return $context->render;
     } else {
         warn q{can not file dispatch method.};

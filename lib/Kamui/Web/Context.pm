@@ -145,10 +145,16 @@ sub redirect {
     $uri->query_form(%{$params});
 
     $self->{is_finished} = 1;
+    $self->res->redirect($uri->as_string);
+    $self->detach;
+}
 
-    my $res = $self->res;
-    $res->redirect($uri->as_string);
-    $res;
+our $DETACH = 'KAMUI_DETACH';
+sub detach { die $DETACH }
+sub is_detach {
+    my ($self, $detach) = @_;
+    return unless $detach;
+    $detach =~ /^${DETACH} at/;
 }
 
 sub uri_with {

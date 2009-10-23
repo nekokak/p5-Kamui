@@ -23,7 +23,7 @@ sub do_index {
     $c->stash->{nick} = $c->req->param('nick') || 'nekokak';
     $c->stash->{name} = 'コバヤシアツシ';
     if ($args->{p} eq 'do_redirect') {
-        return $c->redirect('/redirect_done');
+        $c->redirect('/redirect_done');
     } else {
         $c->stash->{args} = $args->{p};
     }

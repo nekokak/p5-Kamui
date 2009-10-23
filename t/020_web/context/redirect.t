@@ -10,7 +10,8 @@ describe 'redirect tests' => run {
         my $c = Kamui::Web::Context->new(
             app => 'Mock::Web::Handler',
         );
-        my $res = $c->redirect('/');
+        throws_ok(sub {$c->redirect('/')}, qr/^KAMUI_DETACH at/);
+        my $res = $c->res;
         isa_ok $res, 'Kamui::Web::Response';
         is $res->status, '302';
         is $res->location, '/';
