@@ -3,7 +3,6 @@ use Kamui;
 use Encode;
 use Carp ();
 use HTML::FillInForm::Lite;
-use FormValidator::Lite;
 use String::CamelCase qw/camelize decamelize/;
 
 sub _plugin_name {
@@ -124,22 +123,6 @@ sub add_filter {
         Carp::croak("add_filter() needs coderef");
     }
     push @{$self->{_filters}}, $code;
-}
-
-sub validator {
-    my ($self, $valid_class_s) = @_;
-
-    my $valid_class = join '::', $self->app->base_name, 'Web', 'Validator', camelize($valid_class_s);
-    $self->load_class($valid_class);
-
-    my $validator = $valid_class->new(
-        engine  => FormValidator::Lite->new($self->req),
-        context => $self,
-    );
-
-    $validator->{engine}->set_message_data($self->conf->{'validator_message'});
-
-    return $validator;
 }
 
 sub is_finished { $_[0]->{is_finished} }

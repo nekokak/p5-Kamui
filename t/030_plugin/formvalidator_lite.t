@@ -14,6 +14,7 @@ describe 'validation tests' => run {
             QUERY_STRING   => 'p=query',
         };
 
+        Kamui::Web::Context->load_plugins([qw/FormValidatorLite/]);
         my $c = Kamui::Web::Context->new(
             env => $env,
             dispatch_rule => {
@@ -26,9 +27,9 @@ describe 'validation tests' => run {
             conf => container('conf'),
             app  => 'Mock::Web::Handler',
         );
-        my $validator = $c->validator('foo')->add;
+
+        my $validator = $c->validator->valid('foo')->add;
         ok $validator->has_error;
         ok $validator->get_error_messages;
     };
 };
-
