@@ -6,6 +6,12 @@ use HTML::FillInForm::Lite;
 use FormValidator::Lite;
 use String::CamelCase qw/camelize decamelize/;
 
+sub _plugin_name {
+    my $pkg = shift;
+    $pkg = 'Kamui::Plugin::'.$pkg unless $pkg =~ s/^\+//;
+    return $pkg;
+}
+
 sub load_plugins {
     my ($class, $plugins) = @_;
 
@@ -17,8 +23,8 @@ sub load_plugins {
         while (my($method, $initialize_code) = each %{ $register_methods }) {
 
             my $code = sub {
-                my $self = shift;
-                $self->{_plugin}->{$method} ||= $initialize_code->($self);
+                my $context = shift;
+                $context->{_plugin}->{$method} ||= $initialize_code->($context);
             };
 
             no strict 'refs';
@@ -35,12 +41,6 @@ sub new {
         _fillin_fdat => undef,
         @_
     }, $class;
-}
-
-sub _plugin_name {
-    my $pkg = shift;
-    $pkg = 'Kamui::Plugin::'.$pkg unless $pkg =~ s/^\+//;
-    return $pkg;
 }
 
 sub app { $_[0]->{app} }
@@ -126,7 +126,6 @@ sub add_filter {
     push @{$self->{_filters}}, $code;
 }
 
-
 sub validator {
     my ($self, $valid_class_s) = @_;
 
@@ -170,6 +169,22 @@ sub uri_with {
     $uri->query_form($params);
 
     $uri->abs;
+}
+
+sub finalize {
+    my ($self, $response) = @_;
+
+    $self->finalize_plugins($response);
+}
+
+sub finalize_plugins {
+    my ($self, $response) = @_;
+
+    for my $plugin (keys %{$self->{_plugin}}) {
+        if ($self->$plugin->can('finalize')){
+            $self->$plugin->finalize($response);
+        }
+    }
 }
 
 sub handle_404 {
