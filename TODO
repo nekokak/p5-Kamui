@@ -1,4 +1,10 @@
 todo:
 
 - testなさ過ぎ
-
+- fillinはつねにするかどうかの決め（オプションできりかえられるかどうか
+- viewのClassNameを決める部分
+- viewのfilterはあれでいいんかなぁ
+- sessionをもっとまともにする
+- redirect_301もつくるか
+- authももう少し考える
+- containerが長いaliasもきりたいな
