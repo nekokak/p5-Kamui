@@ -1,7 +1,7 @@
 package Kamui::Plugin::MobileAttribute;
 use Kamui;
 use base 'Kamui::Plugin';
-use HTTP::MobileAttribute;
+use HTTP::MobileAttribute plugins => [qw/Core IS/];
 
 sub register_method {
     +{
