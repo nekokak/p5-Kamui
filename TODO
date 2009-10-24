@@ -16,6 +16,6 @@ todo:
 - # docomo guid filter
 - HTTP::MobileAgentもつかえるように
 - encode mobilejp
-- emoji filter
+- # emoji filter
 - Plugin::Mobileにしてみるか
 
