@@ -1,4 +1,4 @@
-package Kamui::Plugin::MobileAttribute;
+package Kamui::Plugin::Mobile::Attribute;
 use Kamui;
 use base 'Kamui::Plugin';
 use HTTP::MobileAttribute plugins => [qw/Core IS/];

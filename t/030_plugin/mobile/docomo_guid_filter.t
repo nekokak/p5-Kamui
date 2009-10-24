@@ -8,7 +8,7 @@ plan tests => blocks;
 describe 'docomo guid filter tests' => run {
 
     init {
-        my $plugins = [qw/MobileAttribute Mobile::DoCoMoGUIDFilter/];
+        my $plugins = [qw/Mobile::Attribute Mobile::DoCoMoGUIDFilter/];
         Kamui::Web::Context->load_plugins($plugins);
     };
 

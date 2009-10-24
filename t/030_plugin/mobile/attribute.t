@@ -7,7 +7,7 @@ plan tests => blocks;
 
 describe 'plugin tests' => run {
     test 'basic test' => run {
-        my $plugins = [qw/MobileAttribute/];
+        my $plugins = [qw/Mobile::Attribute/];
         Kamui::Web::Context->load_plugins($plugins);
 
         my $env = +{
