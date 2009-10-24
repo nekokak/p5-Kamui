@@ -11,7 +11,8 @@ todo:
 - container系でapiとかformとかでnamespaceを省略させるのはいいがもっと汎用的にしたい
 -- registerの拡張でregist_namespaceみたいなので拡張してしまうか？
 
-- docomo css filter
+- mobile css filter
+-- # MobileJpCSSにパッチがひつよう
 - # docomo guid filter
 - encode mobilejp
 - emoji filter
