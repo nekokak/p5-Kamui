@@ -14,6 +14,7 @@ sub register_method {
 package Kamui::Plugin::Mobile::DoCoMoGUIDFilter::Backend;
 use Kamui;
 use HTML::StickyQuery::DoCoMoGUID;
+use Scalar::Util ();
 
 sub new {
     my ($class, $c) = @_;
