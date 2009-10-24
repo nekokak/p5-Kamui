@@ -28,13 +28,12 @@ sub finalize {
     if ( $res && $res->status == 200
         && $res->content_type =~ /html/
         && not( Scalar::Util::blessed( $res->body ) )
-        && $self->c->mobile_attribute->is_docomo
         && $res->body )
     {
         my $body = $res->body;
         my $inliner = Kamui::Plugin::Mobile::CSSFilter::MobileJpCSS->new(
             base_dir => context->config->project_root . '/assets/htdocs',
-            agent    => ( $self->c->mobile_attribute || '' ), # XXX c->mobile
+            agent    => ( $self->c->mobile || '' ),
         );
         $res->body( $inliner->apply($body) );
     }

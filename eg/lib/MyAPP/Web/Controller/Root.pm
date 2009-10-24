@@ -30,10 +30,10 @@ sub do_index {
 
     $c->foo->call; # call plugin method;
 
-    if ( $c->mobile_attribute->is_non_mobile ) {
+    if ( $c->mobile->is_non_mobile ) {
         $c->stash->{agent} = 'pc';
     } else {
-        if ($c->mobile_attribute->is_ezweb) {
+        if ($c->mobile->is_ezweb) {
             $c->stash->{agent} = 'ez';
         }
     }

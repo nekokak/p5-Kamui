@@ -29,7 +29,7 @@ sub finalize {
     if ( $res && $res->status == 200
         && $res->content_type =~ /html/
         && not( Scalar::Util::blessed( $res->body ) )
-        && $self->c->mobile_attribute->is_docomo
+        && $self->c->mobile->is_docomo
         && $res->body )
     {
         my $body = $res->body;

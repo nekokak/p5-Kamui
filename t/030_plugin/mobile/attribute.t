@@ -19,7 +19,7 @@ describe 'plugin tests' => run {
             env => $env,
             app => 'Mock::Web::Handler',
         );
-        isa_ok $c->mobile_attribute, 'HTTP::MobileAttribute::Agent::NonMobile';
+        isa_ok $c->mobile, 'HTTP::MobileAttribute::Agent::NonMobile';
     };
 };
 

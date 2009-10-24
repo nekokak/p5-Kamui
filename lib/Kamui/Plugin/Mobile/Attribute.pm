@@ -5,7 +5,7 @@ use HTTP::MobileAttribute plugins => [qw/Core IS/];
 
 sub register_method {
     +{
-        mobile_attribute => sub {
+        mobile => sub {
             my $c = shift;
             HTTP::MobileAttribute->new($c->req->headers);
         },
