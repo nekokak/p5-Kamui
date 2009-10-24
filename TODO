@@ -12,7 +12,7 @@ todo:
 -- registerの拡張でregist_namespaceみたいなので拡張してしまうか？
 
 - mobile css filter
--- # MobileJpCSSにパッチがひつよう
+-- MobileJpCSSにパッチがひつよう
 - # docomo guid filter
 - HTTP::MobileAgentもつかえるように
 - encode mobilejp
