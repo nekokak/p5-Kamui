@@ -10,6 +10,7 @@ sub _plugin_name {
     return $pkg;
 }
 
+my @initialize_plugins;
 sub load_plugins {
     my ($class, $plugins) = @_;
 
@@ -18,8 +19,12 @@ sub load_plugins {
         $class->load_class($pkg);
 
         my $register_methods = $pkg->register_method;
+        my $do_initialize = $pkg->do_initialize;
         while (my($method, $initialize_code) = each %{ $register_methods }) {
 
+            if ($do_initialize) {
+                push @initialize_plugins, $method;
+            }
             my $code = sub {
                 my $context = shift;
                 $context->{_plugin}->{$method} ||= $initialize_code->($context);
@@ -170,6 +175,20 @@ sub uri_with {
     $uri->query_form($params);
 
     $uri->abs;
+}
+
+sub initialize {
+    my $self = shift;
+
+    $self->initialize_plugins;
+}
+
+sub initialize_plugins {
+    my $self = shift;
+
+    for my $plugin (@initialize_plugins) {
+        $self->$plugin->initialize;
+    }
 }
 
 sub finalize {

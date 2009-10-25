@@ -12,6 +12,13 @@ describe 'plugin tests' => run {
         is $c->foo->call, 'foo';
     };
 
+    test 'initialize test' => run {
+        my $plugins = [qw/+Mock::Plugin::Initialize/];
+        Kamui::Web::Context->load_plugins($plugins);
+        my $c = Kamui::Web::Context->new;
+        stdout_is(sub { $c->initialize }, 'call initialize hook');
+    };
+
     test 'finalize test' => run {
         my $plugins = [qw/+Mock::Plugin::Finalize/];
         Kamui::Web::Context->load_plugins($plugins);

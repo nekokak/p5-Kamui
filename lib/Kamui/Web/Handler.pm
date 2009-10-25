@@ -90,6 +90,7 @@ sub handler {
             app           => $self,
         );
 
+        $context->initialize();
         my $response = $self->dispatch($context);
         $context->finalize($response);
         $response->finalize;
