@@ -30,7 +30,6 @@ describe 'mobile css filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<html><head><link rel="stylesheet" href="/css/t.css" /></head><body>css filter</body></html>');
 
-        $c->mobile_css_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<html><head><link rel="stylesheet" href="/css/t.css" /></head><body>css filter</body></html>';
@@ -54,7 +53,6 @@ describe 'mobile css filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<html><head><link rel="stylesheet" href="/css/t.css" /></head><body>css filter</body></html>');
 
-        $c->mobile_css_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<html><head></head><body style="background-color:#ffffff;">css filter</body></html>';
@@ -78,7 +76,6 @@ describe 'mobile css filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<html><head><link rel="stylesheet" href="/css/t.css" /></head><body>css filter</body></html>');
 
-        $c->mobile_css_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<html><head></head><body style="background-color:#ffffff;">css filter</body></html>';
@@ -102,7 +99,6 @@ describe 'mobile css filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<html><head><link rel="stylesheet" href="/css/t.css" /></head><body>css filter</body></html>');
 
-        $c->mobile_css_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<html><head></head><body style="background-color:#ffffff;">css filter</body></html>';
@@ -126,7 +122,6 @@ describe 'mobile css filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<html><head><link rel="stylesheet" href="/css/t.css" /></head><body>css filter</body></html>');
 
-        $c->mobile_css_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<html><head></head><body style="background-color:#ffffff;">css filter</body></html>';

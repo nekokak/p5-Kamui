@@ -29,7 +29,6 @@ describe 'docomo guid filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<a href="/">top</a>');
 
-        $c->docomo_guid_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<a href="/?guid=ON">top</a>';
@@ -52,7 +51,6 @@ describe 'docomo guid filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<a href="/">top</a>');
 
-        $c->docomo_guid_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<a href="/">top</a>';
@@ -75,7 +73,6 @@ describe 'docomo guid filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<a href="/">top</a>');
 
-        $c->docomo_guid_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<a href="/">top</a>';
@@ -98,7 +95,6 @@ describe 'docomo guid filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<a href="/">top</a>');
 
-        $c->docomo_guid_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<a href="/">top</a>';
@@ -121,7 +117,6 @@ describe 'docomo guid filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('<a href="/">top</a>');
 
-        $c->docomo_guid_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '<a href="/">top</a>';

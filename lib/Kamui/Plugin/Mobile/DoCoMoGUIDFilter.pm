@@ -2,6 +2,7 @@ package Kamui::Plugin::Mobile::DoCoMoGUIDFilter;
 use Kamui;
 use base 'Kamui::Plugin';
 
+sub do_finalize { 1 }
 sub register_method {
     +{
         docomo_guid_filter => sub {

@@ -2,6 +2,7 @@ package Kamui::Plugin::Mobile::CSSFilter;
 use Kamui;
 use base 'Kamui::Plugin';
 
+sub do_finalize { 1 }
 sub register_method {
     +{
         mobile_css_filter => sub {

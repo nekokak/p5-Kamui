@@ -2,6 +2,7 @@ package Mock::Plugin::Finalize;
 use Kamui;
 use base 'Kamui::Plugin';
 
+sub do_finalize { 1 }
 sub register_method {
     +{
         fin => sub {

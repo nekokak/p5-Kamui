@@ -2,6 +2,7 @@ package Kamui::Plugin::Mobile::EmojiFilter;
 use Kamui;
 use base 'Kamui::Plugin';
 
+sub do_finalize { 1 }
 sub register_method {
     +{
         mobile_emoji_filter => sub {

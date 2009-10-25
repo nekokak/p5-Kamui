@@ -11,6 +11,7 @@ sub _plugin_name {
 }
 
 my @initialize_plugins;
+my @finalize_plugins;
 sub load_plugins {
     my ($class, $plugins) = @_;
 
@@ -19,11 +20,13 @@ sub load_plugins {
         $class->load_class($pkg);
 
         my $register_methods = $pkg->register_method;
-        my $do_initialize = $pkg->do_initialize;
         while (my($method, $initialize_code) = each %{ $register_methods }) {
 
-            if ($do_initialize) {
+            if ($pkg->do_initialize) {
                 push @initialize_plugins, $method;
+            }
+            if ($pkg->do_finalize) {
+                push @finalize_plugins, $method;
             }
             my $code = sub {
                 my $context = shift;
@@ -200,10 +203,8 @@ sub finalize {
 sub finalize_plugins {
     my ($self, $response) = @_;
 
-    for my $plugin (keys %{$self->{_plugin}}) {
-        if ($self->$plugin->can('finalize')){
-            $self->$plugin->finalize($response);
-        }
+    for my $plugin (@finalize_plugins) {
+        $self->$plugin->finalize($response);
     }
 }
 

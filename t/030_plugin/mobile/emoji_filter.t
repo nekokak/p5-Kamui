@@ -27,7 +27,6 @@ describe 'emoji filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('{emoji:E21E}');
 
-        $c->mobile_emoji_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, "\x{e21e}";
@@ -49,7 +48,6 @@ describe 'emoji filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('{emozi:E21E}');
 
-        $c->mobile_emoji_filter; # call initializer.
         $c->finalize($res);
 
         is $res->body, '{emozi:E21E}';

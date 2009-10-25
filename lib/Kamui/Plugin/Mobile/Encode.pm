@@ -2,6 +2,8 @@ package Kamui::Plugin::Mobile::Encode;
 use Kamui;
 use base 'Kamui::Plugin';
 
+sub do_initialize { 1 }
+sub do_finalize   { 1 }
 sub register_method {
     +{
         mobile_encode => sub {
