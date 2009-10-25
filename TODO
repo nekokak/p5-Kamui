@@ -14,7 +14,7 @@ todo:
 - mobile css filter
 -- MobileJpCSSにパッチがひつよう
 - # docomo guid filter
-- HTTP::MobileAgentもつかえるように
+- # HTTP::MobileAgentもつかえるように
 - encode mobilejp
 -- reqのエンコーディングをもりもり帰る必要があるので、finalizehookだけではだいめだ
 -- やはり出入りのHookが必要か
