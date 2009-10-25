@@ -11,6 +11,16 @@ sub register_method {
     };
 }
 
+=head2 plugins config
+
+HTML::MobileJpCSSに渡す設定をconfigに書いてください
+
+    $conf->{plugins}->{mobile}->{css_filter} = +{
+        base_dir => 't/assets/',
+    };
+
+=cut
+
 package Kamui::Plugin::Mobile::CSSFilter::Backend;
 use Kamui;
 use Scalar::Util ();
@@ -32,8 +42,8 @@ sub finalize {
     {
         my $body = $res->body;
         my $inliner = Kamui::Plugin::Mobile::CSSFilter::MobileJpCSS->new(
-            base_dir => context->config->project_root . '/assets/htdocs',
             agent    => ( $self->c->mobile || '' ),
+            %{$self->c->conf->{plugins}->{mobile}->{css_filter}},
         );
         $res->body( $inliner->apply($body) );
     }
@@ -41,12 +51,20 @@ sub finalize {
 
 package Kamui::Plugin::Mobile::CSSFilter::MobileJpCSS;
 use Kamui;
-#use base 'HTML::MobileJpCSS';
+use base 'HTML::MobileJpCSS';
 
 # HTML::MobileJpCSS がまだMobileAgentにしか対応していないので、
 # 取りあえずアドホックにラップしておく
-# 送ったパッチがあてられるのはいつだろうか
-# ということでラップする準備
+
+sub _init {
+    my $self = shift;
+    if ($self->{agent}) {
+        $self->{agent} = HTTP::MobileAgent->new($self->{agent}) unless (ref $self->{agent}) =~ /^HTTP::Mobile(Agent|Attribute)/;
+    }
+    else {
+        $self->{agent} = HTTP::MobileAgent->new();
+    }
+}
 
 1;
 

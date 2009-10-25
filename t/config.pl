@@ -34,5 +34,9 @@ $conf->{plugins}->{session} = +{
     state => HTTP::Session::State::Null->new(),
 };
 
+$conf->{plugins}->{mobile}->{css_filter} = +{
+    base_dir => 't/assets/',
+};
+
 return $conf;
 
