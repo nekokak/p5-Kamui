@@ -16,8 +16,8 @@ todo:
 - # docomo guid filter
 - # HTTP::MobileAgentもつかえるように
 - encode mobilejp
--- reqのエンコーディングをもりもり帰る必要があるので、finalizehookだけではだいめだ
--- やはり出入りのHookが必要か
+-- # reqのエンコーディングをもりもり帰る必要があるので、finalizehookだけではだいめだ
+-- # やはり出入りのHookが必要か
 - # emoji filter
 - Plugin::Mobileにしてみるか
 
