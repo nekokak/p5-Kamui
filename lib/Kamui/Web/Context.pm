@@ -165,21 +165,6 @@ sub is_detach {
     $detach =~ /^${DETACH} at/;
 }
 
-sub uri_with {
-    my ($self, @path) = @_;
-
-    $self->app->load_class('URI::WithBase');
-
-    my $params = ref $path[-1] eq 'HASH' ? pop @path : {};
-
-    (my $path = join '/', @path) =~ s!/{2,}!/!g;
-    $path =~ s!^/+!!;
-    my $uri = URI::WithBase->new($path, $self->req->base);
-    $uri->query_form($params);
-
-    $uri->abs;
-}
-
 sub initialize {
     my $self = shift;
 
