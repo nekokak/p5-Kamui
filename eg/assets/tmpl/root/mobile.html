@@ -1,0 +1,28 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=shift-jis" />
+</head>
+<body>
+    hi kamui.<br />
+    i am [% name %].<br />
+    my nick name is [% nick %]<br />
+    [% args %]<br />
+    [% before_dispatch %] : [% after_dispatch %]<br />
+
+    agent is [% agent %] <br />
+    plugin: [% plugin_foo %]<br />
+    method:[% method %]<br /><br />
+
+    [% word = 'あいう' %]
+    <a href="/?foo=[% word | sjis | uri %]">あいう</a>
+    [% IF validator %]
+        [% FOR valid_msg IN validator.get_error_messages %]
+            <strong>[% valid_msg %]</strong>
+        [% END %]
+    [% END %]
+    <form action="/" method="POST">
+        <input type="text" name="name" value="" />
+        <input type="submit" value="do post request" />
+    </form>
+</body>
+</html>

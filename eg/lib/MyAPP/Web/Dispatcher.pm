@@ -9,6 +9,10 @@ on '/' => run {
     return 'Root', 'index', FALSE, +{};
 };
 
+on '/mobile' => run {
+    return 'Root', 'mobile', FALSE, +{ };
+};
+
 on '/json' => run {
     return 'Root', 'json', FALSE, +{ };
 };

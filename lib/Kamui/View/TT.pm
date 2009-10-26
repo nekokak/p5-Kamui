@@ -32,7 +32,7 @@ sub render {
 
     my $res = $context->res;
     $res->status('200');
-    $res->body(Encode::encode('utf8',$output));
+    $res->body($output);
     $res->headers([ 'Content-Type' => 'text/html' ]);
     $res;
 }

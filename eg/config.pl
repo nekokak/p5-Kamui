@@ -21,6 +21,9 @@ return +{
                         ? URI::Escape::uri_escape_utf8($_[0])
                         : URI::Escape::uri_escape($_[0]);
                 },
+                sjis => sub {
+                    Encode::encode('sjis', $_[0])
+                },
             },
         },
         json => +{

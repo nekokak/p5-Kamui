@@ -168,6 +168,7 @@ sub is_detach {
 sub initialize {
     my $self = shift;
 
+    $self->prepare_encoding();
     $self->initialize_plugins;
 }
 
@@ -183,6 +184,7 @@ sub finalize {
     my ($self, $response) = @_;
 
     $self->finalize_plugins($response);
+    $self->finalize_encoding;
 }
 
 sub finalize_plugins {
