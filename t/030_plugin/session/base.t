@@ -14,7 +14,6 @@ describe 'plugin tests' => run {
         my $env = +{
             REQUEST_METHOD => 'GET',
             SCRIPT_NAME    => '/',
-            QUERY_STRING   => 'p=query',
         };
 
         my $c = Kamui::Web::Context->new(
@@ -22,7 +21,10 @@ describe 'plugin tests' => run {
             app  => 'Mock::Web::Handler',
             conf => container('conf'),
         );
-        isa_ok $c->session, 'HTTP::Session';
+        my $session = $c->session;
+        isa_ok $session, 'Kamui::Plugin::Session::Backend';
+        isa_ok $session->{state}, 'Kamui::Plugin::Session::State::Cookie';
+        isa_ok $session->{store}, 'Kamui::Plugin::Session::Store::Memory';
     };
 };
 

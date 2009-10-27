@@ -27,11 +27,15 @@ $conf->{validator_message} = +{
     },
 };
 
-use HTTP::Session::Store::OnMemory;
-use HTTP::Session::State::Null;
 $conf->{plugins}->{session} = +{
-    store => HTTP::Session::Store::OnMemory->new(),
-    state => HTTP::Session::State::Null->new(),
+    state => +{
+        class  => 'Kamui::Plugin::Session::State::Cookie',
+        option => +{},
+    },
+    store => +{
+        class  => 'Kamui::Plugin::Session::Store::Memory',
+        option => +{},
+    },
 };
 
 $conf->{plugins}->{mobile}->{css_filter} = +{
