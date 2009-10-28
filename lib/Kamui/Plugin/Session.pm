@@ -80,7 +80,6 @@ sub _load_session {
 sub get {
     my ($self, $key) = @_;
     my $data = $self->{session_data} or return;
-    $self->{session_updated}=1;
     $data->{ $key };
 }
 
@@ -98,7 +97,7 @@ sub remove {
 }
 
 sub regenerate {
-    my ($self) = @_;
+    my $self = shift;
 
     # ignore if session does not exists
     return unless $self->{session_id};
@@ -115,7 +114,7 @@ sub finalize {
     my ($self, $res) = @_;
 
     if ($self->{session_updated} and my $sid = $self->{session_id}) {
-        $self->_state->finalize($res);
+        $self->{state}->finalize($res);
         $self->_set_session_data( $sid, $self->{session_data} );
     }
 }
@@ -141,8 +140,8 @@ sub _remove_session_id { $_[0]->{state}->remove_session_id($_[0]->{session_id}) 
 
 # Store
 sub _get_session_data    { $_[0]->{store}->get_session_data($_[1])    }
-sub _set_session_data    { $_[0]->{store}->set_session_data    }
-sub _remove_session_data { $_[0]->{store}->remove_session_data }
+sub _set_session_data    { $_[0]->{store}->set_session_data($_[1], $_[2])    }
+sub _remove_session_data { $_[0]->{store}->remove_session_data($_[1]) }
 
 1;
 
