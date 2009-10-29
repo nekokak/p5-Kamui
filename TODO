@@ -3,9 +3,6 @@ todo:
 - testなさ過ぎ
 - fillinはつねにするかどうかの決め（オプションできりかえられるかどうか
 - viewのClassNameを決める部分
-- sessionをもっとまともにする
-- redirect_301もつくるか
-- authももう少し考える
 - containerが長いaliasもきりたいな
 - container系でapiとかformとかでnamespaceを省略させるのはいいがもっと汎用的にしたい
 -- registerの拡張でregist_namespaceみたいなので拡張してしまうか？
