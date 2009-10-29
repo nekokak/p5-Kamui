@@ -15,8 +15,8 @@ sub register_method {
 
 package Kamui::Plugin::Session::Backend;
 use Kamui;
-use Time::HiRes;
-use Digest::SHA1;
+#use Time::HiRes;
+#use Digest::SHA1;
 
 sub new {
     my ($class, $c) = @_;
@@ -123,9 +123,8 @@ sub finalize {
 sub _initialize_session_data {
     my $self = shift;
 
-    my $unique = ( [] . rand() );
     $self->_set_session_id(
-        substr( Digest::SHA1::sha1_hex( Time::HiRes::gettimeofday() . $unique ), 0, $self->{sid_length} )
+        $self->_generate_session_id
     );
     $self->{session_data} = +{};
 }
@@ -138,6 +137,7 @@ sub _set_session_id {
     $self->{state}->set_session_id($sid);
 }
 sub _remove_session_id { $_[0]->{state}->remove_session_id($_[0]->{session_id}) }
+sub _generate_session_id { $_[0]->{state}->generate_session_id($_[0]->{sid_length}) }
 
 # Store
 sub _get_session_data    { $_[0]->{store}->get_session_data($_[1])    }
