@@ -6,7 +6,7 @@ sub new {
     my $class = shift;
 
     bless +{
-        req            => undef,
+        c              => undef,
         cookie_name    => 'kamui_sid',
         cookie_domain  => '',
         cookie_path    => '',
@@ -20,7 +20,7 @@ sub new {
 sub get_session_id {
     my $self = shift;
 
-    my $req = $self->{req};
+    my $req = $self->{c}->req;
 
     if ( my $cookie = $req->cookies->{ $self->{cookie_name} } ) {
         my $sid = $cookie->value;

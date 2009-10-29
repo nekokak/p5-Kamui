@@ -53,6 +53,7 @@ sub _setup_state {
     my $pkg = $self->{conf}->{state}->{class};
     $self->{c}->app->load_class($pkg);
     $self->{state} = $pkg->new(
+        c   => $self->{c},
         req => $self->{c}->req,
         %{$self->{conf}->{state}->{option}}
     );
