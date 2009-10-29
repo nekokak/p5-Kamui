@@ -3,9 +3,10 @@ use Kamui;
 use base 'Class::Singleton';
 use Exporter::AutoClean;
 use UNIVERSAL::require;
-use Carp;
 use String::CamelCase qw/camelize/;
 use Path::Class qw/file dir/;
+
+my $_register_namespace = +{};
 
 sub import {
     my ($class, @opts) = @_;
@@ -21,10 +22,12 @@ sub import {
             push @{"${caller}::ISA"}, $class;
         }
 
-        my $r = $class->can('register');
+        my $register = $class->can('register');
+        my $register_namespace = $class->can('register_namespace');
         Exporter::AutoClean->export(
             $caller,
-            register => sub { $r->($caller, @_) },
+            register => sub { $register->($caller, @_) },
+            register_namespace => sub { $register_namespace->($caller, @_) },
         );
         return;
     }
@@ -86,12 +89,14 @@ sub _export_functions {
 
     for my $name (@export_names) {
 
+        next if $caller->can($name);
         if ($caller->can($name)) { die qq{can't export $name for $caller. $name already defined in $caller.} }
-        my $code = sub {
+        my $code = $_register_namespace->{$name} || sub {
             my $target = shift;
             my $container_name = join '::', $class->base_name, camelize($name), camelize($target);
             return $target ? $class->get($container_name) : $class;
         };
+
         {
             no strict 'refs';
             *{"${caller}::${name}"} = $code;
@@ -129,6 +134,22 @@ sub register {
     }
 
     $self->{_registered_classes}->{$class} = $initializer;
+}
+
+sub register_namespace {
+    my ($self, $method, $pkg) = @_;
+    $self = $self->instance unless ref $self;
+    my $class = ref $self;
+
+    $pkg = camelize($pkg);
+    my $code = sub {
+        my $target = shift;
+        my $container_name = join '::', $pkg, camelize($target);
+        $self->load_class($container_name);
+        return $target ? $class->get($container_name) : $class;
+    };
+
+    $_register_namespace->{$method} = $code;
 }
 
 sub get {

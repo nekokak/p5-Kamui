@@ -1,6 +1,6 @@
 use t::Utils;
 use Test::Declare;
-use Mock::Container qw/api/;
+use Mock::Container qw/api form/;
 
 plan tests => blocks;
 
@@ -10,6 +10,11 @@ describe 'container tests' => run {
         isa_ok api('baz'), 'Mock::Api::Baz';
         is api('baz')->say, 'baz';
         dies_ok(sub { api('hoge') }, q{can't get hoge.});
+    };
+
+    test 'export form' => run {
+        isa_ok form('foo'), 'Mock::Api::Form::Foo';
+        is form('foo')->say, 'foo';
     };
 };
 
