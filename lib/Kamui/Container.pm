@@ -89,7 +89,6 @@ sub _export_functions {
 
     for my $name (@export_names) {
 
-        next if $caller->can($name);
         if ($caller->can($name)) { die qq{can't export $name for $caller. $name already defined in $caller.} }
         my $code = $_register_namespace->{$name} || sub {
             my $target = shift;
