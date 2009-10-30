@@ -4,6 +4,4 @@ todo:
 - fillinはつねにするかどうかの決め（オプションできりかえられるかどうか
 - viewのClassNameを決める部分
 - containerが長いaliasもきりたいな
-- container系でapiとかformとかでnamespaceを省略させるのはいいがもっと汎用的にしたい
--- registerの拡張でregist_namespaceみたいなので拡張してしまうか？
 
