@@ -7,7 +7,7 @@ plan tests => blocks;
 
 describe 'emoji filter tests' => run {
     init {
-        my $plugins = [qw/Mobile::EmojiFilter/];
+        my $plugins = [qw/Encode Mobile::EmojiFilter/];
         Kamui::Web::Context->load_plugins($plugins);
     };
 
@@ -27,7 +27,7 @@ describe 'emoji filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('{emoji:E21E}');
 
-        $c->finalize($res);
+        $c->mobile_emoji_filter->finalize($res);
 
         is $res->body, "\x{e21e}";
     };
@@ -48,7 +48,7 @@ describe 'emoji filter tests' => run {
         $res->headers([ 'Content-Type' => 'text/html' ]);
         $res->body('{emozi:E21E}');
 
-        $c->finalize($res);
+        $c->mobile_emoji_filter->finalize($res);
 
         is $res->body, '{emozi:E21E}';
     };

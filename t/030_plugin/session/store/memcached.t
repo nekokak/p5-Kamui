@@ -3,8 +3,15 @@ use Test::Declare;
 use Kamui::Web::Context;
 use Mock::Container;
 use Mock::Web::Handler;
+use Cache::Memcached::Fast;
 
 plan tests => blocks;
+
+BEGIN {
+    my $memd = Cache::Memcached::Fast->new({servers => ['127.0.0.1:11211']});
+    my $version = $memd->server_versions;
+    plan skip_all => 'can not access local memcached' unless scalar(keys %$version);
+};
 
 describe 'plugin tests' => run {
 

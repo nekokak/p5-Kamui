@@ -1,14 +1,20 @@
 use t::Utils;
 use Test::Declare;
 use Mock::Web::Handler;
+use Kamui::Web::Context;
 
 plan tests => blocks;
 
-my $app = Mock::Web::Handler->new;
-$app->setup;
-my $psgi_handler = $app->handler;
-
 describe 'handler tests' => run {
+    my $psgi_handler;
+
+    init {
+        Kamui::Web::Context->load_plugins([qw/Encode/]);
+        my $app = Mock::Web::Handler->new;
+        $app->setup;
+        $psgi_handler = $app->handler;
+    };
+
     test 'simple handler test' => run {
         my $env = +{
             REQUEST_METHOD    => 'GET',

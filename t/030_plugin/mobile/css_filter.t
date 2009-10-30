@@ -8,7 +8,7 @@ plan tests => blocks;
 
 describe 'mobile css filter tests' => run {
     init {
-        my $plugins = [qw/Mobile::Attribute Mobile::CSSFilter/];
+        my $plugins = [qw/Encode Mobile::Attribute Mobile::CSSFilter/];
         Kamui::Web::Context->load_plugins($plugins);
     };
 
