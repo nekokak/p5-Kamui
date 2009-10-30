@@ -137,7 +137,7 @@ sub dispatch {
         return $res if $context->is_finished;
         return $context->render;
     } else {
-        warn q{can not file dispatch method.};
+        warn q{can not find dispatch method.};
         return $context->handle_404;
     }
 }
