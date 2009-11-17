@@ -25,7 +25,7 @@ sub render {
         $template,
         {
             %{ $context->stash },
-            context => $context,
+            c => $context,
         },
         \my $output
     ) or die $@;
