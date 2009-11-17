@@ -1,7 +1,6 @@
 package Kamui::Container;
 use Kamui;
 use base 'Class::Singleton';
-use Exporter::AutoClean;
 use UNIVERSAL::require;
 use String::CamelCase qw/camelize/;
 use Path::Class qw/file dir/;
@@ -22,13 +21,12 @@ sub import {
             push @{"${caller}::ISA"}, $class;
         }
 
-        my $register = $class->can('register');
-        my $register_namespace = $class->can('register_namespace');
-        Exporter::AutoClean->export(
-            $caller,
-            register => sub { $register->($caller, @_) },
-            register_namespace => sub { $register_namespace->($caller, @_) },
-        );
+        for my $func (qw/register register_namespace/) {
+            my $code = $class->can($func);
+            no strict 'refs'; ## no critic.
+            *{"$caller\::$func"} = sub { warn 'hum'; $code->($caller, @_) };
+        }
+
         return;
     }
     elsif(@opts) {
@@ -42,8 +40,8 @@ sub import {
 sub initialize {
     my $class = shift;
 
-    $class->register(
-        home => sub {
+    register(
+        $class => home => sub {
             return $ENV{KAMUI_HOME} if $ENV{KAMUI_HOME};
             my $class = shift;
 
@@ -64,8 +62,8 @@ sub initialize {
         },
     );
 
-    $class->register(
-        conf => sub {
+    register(
+        $class => conf => sub {
             my $class = shift;
             my $home = $class->get('home');
 
