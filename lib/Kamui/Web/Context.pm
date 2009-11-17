@@ -199,6 +199,28 @@ sub finalize_plugins {
     }
 }
 
+sub uri_with {
+    my($self, $args) = @_;
+    
+    Carp::carp( 'No arguments passed to uri_with()' ) unless $args;
+
+    for my $value (values %{ $args }) {
+        next unless defined $value;
+        for ( ref $value eq 'ARRAY' ? @{ $value } : $value ) {
+            $_ = "$_";
+            utf8::encode( $_ );
+        }
+    };
+    
+    my $uri = $self->req->uri->clone;
+    $uri->query_form( {
+        %{ $uri->query_form_hash },
+        %{ $args },
+    } );
+    return $uri;
+}
+
+
 sub handle_404 {
     my $self = shift;
 
