@@ -24,7 +24,7 @@ sub import {
         for my $func (qw/register register_namespace/) {
             my $code = $class->can($func);
             no strict 'refs'; ## no critic.
-            *{"$caller\::$func"} = sub { warn 'hum'; $code->($caller, @_) };
+            *{"$caller\::$func"} = sub { $code->($caller, @_) };
         }
 
         return;
