@@ -7,8 +7,8 @@ use Mock::Web::Dispatcher;
 
 plan tests => blocks;
 
-describe 'uri_with tests' => run {
-    test 'uri_with' => run {
+describe 'guess_filename tests' => run {
+    test 'guess_filename' => run {
         my $env = +{
             HTTP_HOST      => 'example.com',
             REQUEST_METHOD => 'GET',
