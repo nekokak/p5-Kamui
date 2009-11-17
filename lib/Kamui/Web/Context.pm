@@ -103,7 +103,6 @@ sub render {
     my $self = shift;
 
     $self->load_class($self->view);
-    $self->view->render($self);
     my $res = $self->view->render($self);
 
     $res = $self->fillin_form($res);
