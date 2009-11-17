@@ -14,6 +14,7 @@ my @initialize_plugins;
 my @finalize_plugins;
 sub load_plugins {
     my ($class, $plugins) = @_;
+    $class = ref $class || $class;
 
     for my $plugin (@{$plugins}) {
         my $pkg = _plugin_name($plugin);
@@ -167,6 +168,10 @@ sub is_detach {
 
 sub initialize {
     my $self = shift;
+
+    unless ( $self->can('prepare_encoding') ) {
+        $self->load_plugins([qw/Encode/]);
+    }
 
     $self->prepare_encoding();
     $self->initialize_plugins;
