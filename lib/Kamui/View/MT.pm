@@ -39,7 +39,7 @@ sub render {
         },
         %{ $context->conf->{view}->{mt}->{options} || {} },
     );
-    my $output = $mt->render($template);
+    my $output = $mt->render($template)->as_string;
 
     my $res = $context->res;
     $res->status('200');
