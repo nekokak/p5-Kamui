@@ -2,6 +2,7 @@ package Kamui::Web::Authorizer::BasicAuth;
 use Kamui;
 use base qw/Kamui::Web::Authorizer Class::Data::Inheritable/;
 use MIME::Base64;
+use Kamui::Web::Response;
 
 __PACKAGE__->mk_classdata(realm => 'Authorization Required');
 
@@ -21,15 +22,19 @@ sub basic_auth {
 sub show_error_page {
     my ($class, $context) = @_;
     my $realm = $class->realm;
-    [
-        401,
+
+    # FIXME: use $context->res.
+    my $res = Kamui::Web::Response->new;
+    $res->status('401');
+    $res->body('not authorized');
+    $res->headers(
         [
             "Content-Type"     => "text/plain",
             "Content-Length"   => 21,
             "WWW-Authenticate" => qq{Basic realm="$realm"}
-        ],
-        ["not authorized"]
-    ];
+        ]
+    );
+    $res;
 }
 
 1;
