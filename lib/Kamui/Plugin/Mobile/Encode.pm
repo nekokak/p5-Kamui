@@ -1,17 +1,21 @@
 package Kamui::Plugin::Mobile::Encode;
 use Kamui;
 use base 'Kamui::Plugin';
-use Data::Visitor::Encode;
 use Encode ();
-use Encode::JP::Mobile ();
+use Encode::JP::Mobile;
 
 sub register_method {
     +{
         prepare_encoding => sub {
             my $c = shift;
-            $c->req->parameters(
-                Data::Visitor::Encode->decode( $c->mobile->encoding, $c->req->parameters )
-            );
+
+            my $params = $c->req->parameters;
+            my $decoded_params = {};
+            while (my($k, $v) = each %$params) {
+                $decoded_params->{Encode::decode($c->mobile->encoding, $k)} = ref $v eq 'ARRAY'
+                    ? [ map Encode::decode($c->mobile->encoding, $_), @$v ] : Encode::decode($c->mobile->encoding, $v);
+            }
+            $c->req->parameters($decoded_params);
         },
 
         finalize_encoding => sub {
