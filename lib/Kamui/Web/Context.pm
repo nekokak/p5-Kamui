@@ -153,6 +153,7 @@ sub redirect {
     $uri->query_form(%{$params});
 
     $self->{is_finished} = 1;
+    $self->res->content_type("text/html");
     $self->res->redirect($uri->as_string);
     $self->detach;
 }
