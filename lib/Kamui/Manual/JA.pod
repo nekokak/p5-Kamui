@@ -1,0 +1,17 @@
+=head1 NAME
+
+Kamui::Manual::JA - what's kamui
+
+=head1 DESCRIPTION
+
+Kamui は psgi に対応したフレームワークです.
+
+Kamui は Sledge と ark を参考にして作りました.
+
+Sledge の見通しの良さと ark の container 経由での
+各種API呼び出しを私なりに使い勝手が良いように構成し直しました.
+
+また、mobileサイトが簡単に作れるようにmobile用のプラグインを各種用意しておきました.
+
+=cut
+

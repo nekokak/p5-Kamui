@@ -1,0 +1,101 @@
+=head1 NAME
+
+Kamui::Manual::JA::Mobile - Kamui でケータイ対応
+
+=head1 DESCRIPTION
+
+Kamuiではデフォルトでモバイル用Pluginが用意されています。
+モバイル用Pluginをつかうことで簡単にモバイル対応なサイトを作成することが可能です。
+
+=head1 HOW TO ADD MOBILE PHONE SUPPORT
+
+=head2 HTTP::Mobile(Agent|Attribute) との連携
+
+    package MyApp::Web::Handler;
+    use Kamui::Web::Handler;
+    use_plugins [qw/Mobile::Agent/];
+    1;
+
+として、Kamui::Plugin::Mobile::AgentのPluginを有効にするだけです。
+HTTP::MobileAgent を気軽につかえるようになります。
+
+    package MyAPP::Web::Controller::Root;
+    use Kamui::Web::Controller -base;
+    
+    sub do {
+        my ($class, $c) = @_;
+        $c->mobile; # HTTP::MobileAgent
+    }
+
+HTTP::MobileAttributeを利用する場合は
+
+    package MyApp::Web::Handler;
+    use Kamui::Web::Handler;
+    use_plugins [qw/Mobile::Agent/];
+    1;
+
+とするだけで、HTTP::MobileAttributeを気軽に使えるようになります。
+
+    package MyAPP::Web::Controller::Root;
+    use Kamui::Web::Controller -base;
+    
+    sub do {
+        my ($class, $c) = @_;
+        $c->mobile; # HTTP::MobileAttribute
+    }
+
+=head2 Encode::JP::Mobile との連携
+
+絵文字を扱うには L<Encode::JP::Mobile> をつかうとよいのですが、
+KamuiではKamui::Plugin::Mobile::Encodeを使えば自動で文字コードの判別
+response時のcontent-typeの設定などを行ってくれます。
+
+    package MyApp::Web::Handler;
+    use Kamui::Web::Handler;
+    use_plugins [qw/Mobile::Encode Mobile::Agent/];
+    1;
+
+Kamui::Plugin::Mobile::EncodeはKamui::Plugin::Mobile::(Agent|Attribute)を一緒に
+使う必要がありますので注意してください。
+
+Kamui::Plugin::Mobile::Encodeを使えば簡単にキャリアに対応した文字コードを取り扱う事ができるので
+大変便利です。
+
+=head2 CSS のインライン化
+
+docomoの端末では外部CSSを利用することができないので、レスポンスで返すHTMLにCSSをインライン化して
+レスポンスを返す必要があります。
+それにはKamui::Plugin::Mobile::CSSFilterを使うと良いです。
+
+    package MyApp::Web::Handler;
+    use Kamui::Web::Handler;
+    use_plugins [qw/Mobile::CSSFilter Mobile::Agent/];
+    1;
+
+このようにPluginを有効にしておくだけでdocomoの端末の場合に勝手にCSSをインライン化してくれます。
+なお、Kamui::Plugin::Mobile::CSSFilterには
+Kamui::Plugin::Mobile::Agent もしくは Kamui::Plugin::Mobile::AttributeのどちらかのPluginを
+有効にしておく必要があります。
+
+=head2 docomo guid
+
+docomoではuriにguid=onを設定することで、端末番号を取得する事が可能です。
+そこで
+Kamui::Plugin::Mobile::DoCoMoGUIDFilterを利用すれば
+サイト内のリンク全てにguid=onを自動で設定してくれます。
+
+    package MyApp::Web::Handler;
+    use Kamui::Web::Handler;
+    use_plugins [qw/Mobile::DoCoMoGUIDFilter Mobile::Agent/];
+    1;
+
+このKamui::Plugin::Mobile::DoCoMoGUIDFilterでは
+Kamui::Plugin::Mobile::AgentもしくはKamui::Plugin::Mobile::AttributeのどちらかのPluginを
+有効にしておく必要があります。
+
+=head2 簡単絵文字利用　
+
+そのうち書く
+
+=cut
+

@@ -1,0 +1,63 @@
+=head1 NAME
+
+Kamui::Manual::JA::Tutorial - Kamui 日本語チュートリアル
+
+=head1 チュートリアル
+
+=head2 インストール
+
+以下のコマンドを入力することによりインストールできます。
+
+  git clone git://github.com/nekokak/p5-Kamui.git
+  cd p5-Kamui
+  perl Makefile.PL
+  make installdeps
+  make install
+
+=head2 Hello Kamui
+
+まずは、アプリケーションの雛形を作成します。
+
+  $ kamui.pl Hello
+  $ cd Hello
+
+雛形のディレクトリ構造は以下のようになっています。
+
+    ./Hello
+    |-- assets
+    |   |-- htdocs
+    |   |   |-- css
+    |   |   `-- img
+    |   |-- script
+    |   |   `-- Hello.psgi
+    |   `-- tmpl
+    |       |-- base.html
+    |       `-- root
+    |           `-- index.html
+    |-- config.pl
+    |-- config_local.pl
+    |-- lib
+    |   |-- Hello
+    |   |   |-- Container.pm
+    |   |   `-- Web
+    |   |       |-- Context.pm
+    |   |       |-- Controller
+    |   |       |   `-- Root.pm
+    |   |       |-- Dispatcher.pm
+    |   |       `-- Handler.pm
+    |   `-- Hello.pm
+    `-- t
+
+assets以下にhtdocsやtemplateファイルpsgiのファイルなどが格納されています。
+lib以下にはアプリケーションのコードがあり
+topディレクトリにはconfig.plとconfig_local.plがあります。
+
+config.plはデフォルトの設定情報を記述します。
+config_local.plではデフォルトの設定情報を上書きで設定することが可能です。
+
+Kamui のアプリケーションを起動させるには L<plackup> コマンドを利用します。
+
+  $ plackup Hello.psgi
+  Plack::Server::Standalone: Accepting connections at http://0:5000/
+
+=cut
