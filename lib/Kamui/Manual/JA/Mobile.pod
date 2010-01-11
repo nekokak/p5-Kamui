@@ -31,7 +31,7 @@ HTTP::MobileAttributeを利用する場合は
 
     package MyApp::Web::Handler;
     use Kamui::Web::Handler;
-    use_plugins [qw/Mobile::Agent/];
+    use_plugins [qw/Mobile::Attribute/];
     1;
 
 とするだけで、HTTP::MobileAttributeを気軽に使えるようになります。
