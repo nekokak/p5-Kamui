@@ -1,0 +1,68 @@
+=head1 NAME
+
+Kamui::Manual::JA::Session - KamuiのSessionについて
+
+=head1 DESCRIPTION
+
+Kamuiでは現在のところsessionの管理についてHTTP::Sessionを参考に
+独自に作られているます。
+
+HTTP::Sessionに使い慣れている人であれば特に問題ないでしょう。
+
+
+=head1 Sessionの使い方
+
+Kamuiでsessionを使うには、Kamui::Plugin::Sessionを使います。
+
+Pluginの使い方についてはL<Kamui::Manual::JA::Plugin>を見てください。
+
+
+    package MyAPP::Web::Handler;
+    use Kamui::Web::Handler;
+    use_container 'MyAPP::Container';
+    use_plugins [qw/Encode Session/];
+    1;
+
+Kamui::Plugin::Sessionをつかうにはuse_pluginsでloadさせます。
+Kamui::Plugin::Sessionにはconfigに設定情報を記述する必要があります。
+
+config.plに
+
+    plugins => +{
+        session => +{
+            state => +{
+                class  => 'Kamui::Plugin::Session::State::Cookie',
+                option => +{},
+            },
+            store => +{
+                class  => 'Kamui::Plugin::Session::Store::Memory',
+                option => +{},
+            },
+        },
+    },
+
+このような設定を書きます。
+Kamui::Plugin::Sessionはsession管理にstate/storeという役割に分割していますので
+それぞれで利用するクラス名を指定します。
+optionの項目にはstate/storeで指定したクラスで必要な設定情報を記述します。
+
+設定は以上です。
+
+これでほかのPluginと同じように
+
+    $context->session
+
+と言う形でsessionにアクセスできます。
+
+セッション情報をセットするには
+
+    $context->session->set(key => 'val');
+
+とし、設定されているセッション情報を取得するには
+
+    $context->session->get('key');
+
+とします。
+
+=cut
+

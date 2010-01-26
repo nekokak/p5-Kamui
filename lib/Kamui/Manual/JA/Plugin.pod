@@ -1,0 +1,45 @@
+=head1 NAME
+
+Kamui::Manual::JA::Plugin - KamuiのPluginについて
+
+=head1 DESCRIPTION
+
+KamuiではPlugin機構を備えています。
+
+デフォルトでKamui::Pluginに色々なプラグインを用意しているので参考にしてください。
+
+=head1 Pluginでできること
+
+Kamui::Pluginでは基本的にContextにメソッドを設定します。
+
+Pluginを使うと
+
+    $context->xxxx
+
+のようにプラグインで作ったメソッドにアクセスすることができます。
+
+=head1 Pluginの作り方
+
+Pluginをつくるのは簡単です。
+
+    package MyAPP::Plugin::Foo;
+    use Kamui;
+    use base 'Kamui::Plugin';
+    sub register_method {
+        +{
+            foo => sub {
+                'foo';
+            },
+        };
+    }
+    1;
+
+このようにKamui::Pluginを継承したモジュールをつくり、
+register_methodというfunction内に作りたいPluginの内容をhashrefで書くだけです。
+
+この例の場合、
+fooという名前でcontextにメソッドがinjectionされ
+対応するcoderefが呼び出されるロジックになります。
+
+=cut
+
