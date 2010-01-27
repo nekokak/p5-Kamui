@@ -124,9 +124,9 @@ sub dispatch {
 
         my $res;
         eval {
-            $controller->call_trigger('before_dispatch', $context);
+            $controller->call_trigger('before_dispatch', $context, $context->dispatch_rule->{args});
             $res = $controller->$method($context, $context->dispatch_rule->{args});
-            $controller->call_trigger('after_dispatch', $context);
+            $controller->call_trigger('after_dispatch', $context, $context->dispatch_rule->{args});
         };
         if ( $context->is_detach($@) ) {
             return $context->res;
