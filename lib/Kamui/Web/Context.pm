@@ -213,6 +213,8 @@ sub uri_with {
         }
     };
     
+    $self->app->load_class('URI::QueryParam');
+
     my $uri = $self->req->uri->clone;
     $uri->query_form( {
         %{ $uri->query_form_hash },

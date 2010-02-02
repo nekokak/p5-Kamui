@@ -22,9 +22,8 @@ sub get_session_id {
 
     my $req = $self->{c}->req;
 
-    if ( my $cookie = $req->cookies->{ $self->{cookie_name} } ) {
-        my $sid = $cookie->value;
-        return $sid if $sid;
+    if ( my $sid = $req->cookies->{ $self->{cookie_name} } ) {
+        return $sid;
     }
 
     return;
