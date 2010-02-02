@@ -17,6 +17,8 @@ requires 'Text::MicroTemplate::Extended';
 requires 'HTML::FillInForm::Lite';
 requires 'Class::Trigger';
 requires 'Class::Data::Inheritable';
+requires 'Template';
+requires 'Template::Stash::EscapeHTML';
 
 test_requires 'Test::Declare';
 
