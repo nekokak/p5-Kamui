@@ -40,7 +40,7 @@ sub determine {
 
     for my $dispatch_rule (@{$class->dispatch_table}) {
         if ($env->{PATH_INFO} =~ $dispatch_rule->{regexp}) {
-            my ($controller, $page, $static, $args) = $dispatch_rule->{code}->();
+            my ($controller, $page, $static, $args) = $dispatch_rule->{code}->($context);
             if ($controller) {
                 return +{
                     controller => join('::', $class->base_name, 'Web', 'Controller', $controller),
