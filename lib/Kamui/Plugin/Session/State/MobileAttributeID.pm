@@ -33,7 +33,7 @@ sub get_session_id {
             die "cannot detect mobile id from $ma";
         }
     } else {
-        die "this carrier doesn't supports user_id: $ma";
+        return '';
     }
 }
 
