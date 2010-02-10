@@ -118,15 +118,16 @@ sub dispatch {
 
     if (my $dispatch_code = $controller->can($method)) {
 
-        if (my $not_authorized = $controller->authorize($dispatch_code, $context)) {
-            return $not_authorized;
-        }
-
         my $res;
         eval {
-            $controller->call_trigger('before_dispatch', $context, $context->dispatch_rule->{args});
-            $res = $controller->$method($context, $context->dispatch_rule->{args});
-            $controller->call_trigger('after_dispatch', $context, $context->dispatch_rule->{args});
+
+            if (my $not_authorized = $controller->authorize($dispatch_code, $context)) {
+                $res = $not_authorized;
+            } else {
+                $controller->call_trigger('before_dispatch', $context, $context->dispatch_rule->{args});
+                $res = $controller->$method($context, $context->dispatch_rule->{args});
+                $controller->call_trigger('after_dispatch', $context, $context->dispatch_rule->{args});
+            }
         };
         if ( $context->is_detach($@) ) {
             return $context->res;
