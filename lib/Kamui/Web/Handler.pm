@@ -88,7 +88,7 @@ sub handler {
             app           => $self,
         );
         my $rule = $self->dispatcher->determine($context);
-        $context->{dispatch_rule} = $rule; # FIXME: ugly code
+        $context->dispatch_rule($rule);
 
         $context->initialize();
         my $response = $self->dispatch($context);

@@ -66,7 +66,11 @@ sub res {
     };
 }
 
-sub dispatch_rule { $_[0]->{dispatch_rule} }
+sub dispatch_rule {
+    my ($self, $rule) = @_;
+    $self->{dispatch_rule} = $rule if $rule;
+    $self->{dispatch_rule};
+}
 
 sub fillin_fdat {
     my ($self, $val) = @_;
