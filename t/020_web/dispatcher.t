@@ -1,5 +1,6 @@
 use t::Utils;
 use Test::Declare;
+use Kamui::Web::Context;
 use Mock::Web::Dispatcher;
 
 plan tests => blocks;
@@ -12,7 +13,8 @@ describe 'dispatcher tests' => run {
             PATH_INFO      => '/',
         };
 
-        my $map = Mock::Web::Dispatcher->determine($env);
+        my $c = create_context($env);
+        my $map = Mock::Web::Dispatcher->determine($c);
         is_deeply $map, {
             controller => 'Mock::Web::Controller::Root',
             action     => 'index',
@@ -27,7 +29,8 @@ describe 'dispatcher tests' => run {
             PATH_INFO      => '/foo',
         };
 
-        my $map = Mock::Web::Dispatcher->determine($env);
+        my $c = create_context($env);
+        my $map = Mock::Web::Dispatcher->determine($c);
         is_deeply $map, {
             controller => 'Mock::Web::Controller::Root',
             action     => 'index',
@@ -38,3 +41,12 @@ describe 'dispatcher tests' => run {
 };
 
 
+sub create_context {
+    my $env = shift;
+    return Kamui::Web::Context->new(
+        env  => $env,
+        dispatch_rule => undef,
+        conf => undef,
+        app  => 'Mock::Web::Handler',
+    );
+}

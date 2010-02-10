@@ -19,10 +19,12 @@ describe 'guess_filename tests' => run {
 
         my $c = Kamui::Web::Context->new(
             env  => $env,
-            dispatch_rule => Mock::Web::Dispatcher->determine($env),
+            dispatch_rule => undef,
             conf => container('conf'),
             app  => 'Mock::Web::Handler',
         );
+        my $rule = Mock::Web::Dispatcher->determine($c);
+        $c->{dispatch_rule} = $rule;
         is $c->guess_filename, 'root/index.html';
     };
 };

@@ -35,7 +35,8 @@ sub camelize_path {
 }
 
 sub determine {
-    my ($class, $env) = @_;
+    my ($class, $context) = @_;
+    my $env = $context->{env};
 
     for my $dispatch_rule (@{$class->dispatch_table}) {
         if ($env->{PATH_INFO} =~ $dispatch_rule->{regexp}) {

@@ -80,15 +80,15 @@ sub handler {
     sub {
         my $env = shift;
 
-        my $rule = $self->dispatcher->determine($env);
-
         my $context = $context_class->new(
             env           => $env,
-            dispatch_rule => $rule,
+            dispatch_rule => undef,
             view          => $view || 'Kamui::View::TT',
             conf          => container('conf'),
             app           => $self,
         );
+        my $rule = $self->dispatcher->determine($context);
+        $context->{dispatch_rule} = $rule; # FIXME: ugly code
 
         $context->initialize();
         my $response = $self->dispatch($context);

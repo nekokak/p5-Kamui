@@ -19,10 +19,13 @@ describe 'default encoding tests' => run {
 
         my $c = Kamui::Web::Context->new(
             env  => $env,
-            dispatch_rule => Mock::Web::Dispatcher->determine($env),
+            dispatch_rule => undef,
             conf => container('conf'),
             app  => 'Mock::Web::Handler',
         );
+        my $rule = Mock::Web::Dispatcher->determine($c);
+        $c->{dispatch_rule} = $rule;
+
         ok not $c->can('prepare_encoding');
         $c->initialize;
         can_ok $c, 'prepare_encoding';
