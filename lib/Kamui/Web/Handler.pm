@@ -82,7 +82,7 @@ sub handler {
 
         my $context = $context_class->new(
             env           => $env,
-            dispatch_rule => undef,
+            dispatch_rule => +{},
             view          => $view || 'Kamui::View::TT',
             conf          => container('conf'),
             app           => $self,
@@ -100,13 +100,14 @@ sub handler {
 sub dispatch {
     my ($self, $context) = @_;
 
-    my $controller = $context->dispatch_rule->{controller};
-    $controller->use or do {
-        warn $@;
+    my $controller = $context->dispatch_rule->{controller}||'';
+    ($controller && $controller->use) or do {
+        warn "[404] controller : $controller $@";
         return $context->handle_404;
     };
+
     my $action = $context->dispatch_rule->{action} or do {
-        warn $@;
+        warn "[500] controller : $controller, action : $context->dispatch_rule->{action} $@";
         return $context->handle_404;
     };
 
