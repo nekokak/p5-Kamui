@@ -14,6 +14,7 @@ sub register_method {
 package Kamui::Plugin::FormValidatorLite::Backend;
 use Kamui;
 use String::CamelCase qw/camelize/;
+use FormValidator::Lite;
 
 sub new {
     my ($class, $c) = @_;
@@ -35,35 +36,13 @@ sub valid {
     };
 
     my $validator = $valid_class->new(
-        engine  => Kamui::Plugin::FormValidatorLite::Backend::Base->new($self->c->req),
+        engine  => FormValidator::Lite->new($self->c->req),
         context => $self->c,
     );
 
     $validator->{engine}->set_message_data($self->c->conf->{'validator_message'});
 
     return $validator;
-}
-
-package Kamui::Plugin::FormValidatorLite::Backend::Base;
-use Kamui;
-use base 'FormValidator::Lite';
-
-sub get_error_message_from_param {
-    my ($self, $target_param) = @_;
-
-    my %dup_check;
-    my @messages;
-    for my $err (@{$self->{_error_ary}}) {
-        my $param = $err->[0];
-        my $func  = $err->[1];
-
-        next if $target_param ne $param;
-        next if exists $dup_check{"$param.$func"};
-        push @messages, $self->get_error_message( $param, $func );
-        $dup_check{"$param.$func"}++;
-    }
-
-    return @messages;
 }
 
 1;
