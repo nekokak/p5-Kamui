@@ -42,7 +42,7 @@ sub initialize {
 
     register(
         $class => home => sub {
-            return $ENV{KAMUI_HOME} if $ENV{KAMUI_HOME};
+            return dir($ENV{KAMUI_HOME}) if $ENV{KAMUI_HOME};
             my $class = shift;
 
             $class = ref $class || $class;
