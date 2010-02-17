@@ -88,7 +88,12 @@ sub view {
     }
 }
 
-sub load_template : lvalue { $_[0]->{load_template} }
+sub load_template {
+    my ($self, $tmpl) = @_;
+    $self->{load_template} = $tmpl if $tmpl;
+    $self->{load_template};
+}
+
 sub guess_filename {
     my $self = shift;
 
