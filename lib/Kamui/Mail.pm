@@ -1,6 +1,5 @@
 package Kamui::Mail;
-use strict;
-use warnings;
+use Kamui;
 use MIME::Lite::TT::Japanese;
 use File::Slurp;
 use Template;
