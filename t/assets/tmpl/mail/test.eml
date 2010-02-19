@@ -1,0 +1,3 @@
+[test] [% subject_param %] テストメールですよ
+
+[% body_param %]あいうえお

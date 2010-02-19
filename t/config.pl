@@ -42,5 +42,7 @@ $conf->{plugins}->{mobile}->{css_filter} = +{
     base_dir => 't/assets/',
 };
 
+$conf->{debug} = 1;
+
 return $conf;
 
