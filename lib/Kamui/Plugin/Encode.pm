@@ -20,7 +20,7 @@ sub register_method {
             my $c = shift;
             my $res = $c->res;
             my $body = $res->body;
-            $res->body(Encode::encode('utf8',$body));
+            $res->body(Encode::encode('utf8',$body)) unless $c->view eq 'Kamui::View::JSON';
         },
     },
 };
