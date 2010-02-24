@@ -3,19 +3,18 @@ use Kamui;
 use base 'Kamui::Plugin';
 use Encode ();
 use Encode::JP::Mobile;
+use Hash::MultiValue;
 
 sub register_method {
     +{
         prepare_encoding => sub {
             my $c = shift;
 
-            my $params = $c->req->parameters;
-            my $decoded_params = {};
-            while (my($k, $v) = each %$params) {
-                $decoded_params->{Encode::decode($c->mobile->encoding, $k)} = ref $v eq 'ARRAY'
-                    ? [ map Encode::decode($c->mobile->encoding, $_), @$v ] : Encode::decode($c->mobile->encoding, $v);
+            $c->req->env->{'plack.request.query'} ||= _decode_multivalue( Hash::MultiValue->new($c->req->uri->query_form), $c->mobile->encoding );
+            unless ($c->req->env->{'plack.request.body'}) {
+                $c->req->_parse_request_body;
+                $c->req->env->{'plack.request.body'} = _decode_multivalue( $c->req->env->{'plack.request.body'}, $c->mobile->encoding );
             }
-            $c->req->parameters($decoded_params);
         },
 
         finalize_encoding => sub {
@@ -46,6 +45,18 @@ sub register_method {
             }
         },
     };
+}
+
+sub _decode_multivalue {
+    my ($hash, $encoding) = @_;
+
+    my $params = $hash->mixed;
+    my $decoded_params = {};
+    while (my($k, $v) = each %$params) {
+        $decoded_params->{Encode::decode($encoding, $k)} = ref $v eq 'ARRAY'
+            ? [ map Encode::decode($encoding, $_), @$v ] : Encode::decode($encoding, $v);
+    }
+    return Hash::MultiValue->from_mixed(%$decoded_params);
 }
 
 1;

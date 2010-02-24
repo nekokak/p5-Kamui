@@ -87,12 +87,14 @@ sub handler {
             conf          => container('conf'),
             app           => $self,
         );
+        $context->initialize();
+
         my $rule = $self->dispatcher->determine($context);
         $context->dispatch_rule($rule);
 
-        $context->initialize();
         my $response = $self->dispatch($context);
         $context->finalize($response);
+
         $response->finalize;
     };
 }

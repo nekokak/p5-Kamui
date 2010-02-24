@@ -81,6 +81,7 @@ sub fillin_fdat {
 sub view {
     my ($self, $view) = @_;
 
+    $self->{view} ||= 'Kamui::View::TT';
     if ($view) {
         $self->{view} = 'Kamui::View::'.$view;
     } else {
