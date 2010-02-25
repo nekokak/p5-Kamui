@@ -1,56 +1,53 @@
 use t::Utils;
-use Test::Declare;
+use Test::More;
 use Kamui::Web::Context;
 use Mock::Web::Handler;
 
-plan tests => blocks;
+my $plugins = [qw/Encode Mobile::EmojiFilter/];
+Kamui::Web::Context->load_plugins($plugins);
 
-describe 'emoji filter tests' => run {
-    init {
-        my $plugins = [qw/Encode Mobile::EmojiFilter/];
-        Kamui::Web::Context->load_plugins($plugins);
+subtest 'emoji filter' => sub {
+    my $env = +{
+        REQUEST_METHOD  => 'GET',
+        SCRIPT_NAME     => '/',
     };
 
-    test 'emoji filter' => run {
-        my $env = +{
-            REQUEST_METHOD  => 'GET',
-            SCRIPT_NAME     => '/',
-        };
+    my $c = Kamui::Web::Context->new(
+        env => $env,
+        app => 'Mock::Web::Handler',
+    );
 
-        my $c = Kamui::Web::Context->new(
-            env => $env,
-            app => 'Mock::Web::Handler',
-        );
+    my $res = $c->res;
+    $res->status('200');
+    $res->headers([ 'Content-Type' => 'text/html' ]);
+    $res->body('{emoji:E21E}');
 
-        my $res = $c->res;
-        $res->status('200');
-        $res->headers([ 'Content-Type' => 'text/html' ]);
-        $res->body('{emoji:E21E}');
+    $c->mobile_emoji_filter->finalize($res);
 
-        $c->mobile_emoji_filter->finalize($res);
-
-        is $res->body, "\x{e21e}";
-    };
-
-    test 'emoji filter' => run {
-        my $env = +{
-            REQUEST_METHOD  => 'GET',
-            SCRIPT_NAME     => '/',
-        };
-
-        my $c = Kamui::Web::Context->new(
-            env => $env,
-            app => 'Mock::Web::Handler',
-        );
-
-        my $res = $c->res;
-        $res->status('200');
-        $res->headers([ 'Content-Type' => 'text/html' ]);
-        $res->body('{emozi:E21E}');
-
-        $c->mobile_emoji_filter->finalize($res);
-
-        is $res->body, '{emozi:E21E}';
-    };
+    is $res->body, "\x{e21e}";
+    done_testing;
 };
 
+subtest 'emoji filter' => sub {
+    my $env = +{
+        REQUEST_METHOD  => 'GET',
+        SCRIPT_NAME     => '/',
+    };
+
+    my $c = Kamui::Web::Context->new(
+        env => $env,
+        app => 'Mock::Web::Handler',
+    );
+
+    my $res = $c->res;
+    $res->status('200');
+    $res->headers([ 'Content-Type' => 'text/html' ]);
+    $res->body('{emozi:E21E}');
+
+    $c->mobile_emoji_filter->finalize($res);
+
+    is $res->body, '{emozi:E21E}';
+    done_testing;
+};
+
+done_testing;
