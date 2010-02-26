@@ -11,7 +11,7 @@ subtest 'no conf case' => sub {
         Kamui::Mail->new(
             'test.eml', => {
                 From => 'nekokak@gmail.com',
-                To   => 'kobayashi@con-course.com',
+                To   => 'nekokak@gmail.com',
                 TmplParams => +{
                     subject_param => 'nekokak からだよ',
                     body_param    => 'nekokak にだよ',
@@ -30,12 +30,12 @@ subtest 'mail send' => sub {
         Kamui::Mail->new(
             'test.eml', => {
                 From => 'nekokak@gmail.com',
-                To   => 'kobayashi@con-course.com',
+                To   => 'nekokak@gmail.com',
                 TmplParams => +{
                     subject_param => 'nekokak からだよ',
                     body_param    => 'nekokak にだよ',
                 },
-                conf => container('conf'),
+                 container('conf'),
             }
         )->send;
 
@@ -55,7 +55,7 @@ subtest 'mail no send' => sub {
             my $mail = Kamui::Mail->new(
                 'test.eml', => {
                     From => 'nekokak@gmail.com',
-                    To   => 'kobayashi@con-course.com',
+                    To   => 'nekokak@gmail.com',
                     TmplParams => +{
                         subject_param => 'nekokak からだよ',
                         body_param    => 'nekokak にだよ',
