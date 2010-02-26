@@ -20,18 +20,14 @@ sub get_session_id {
     my $self = shift;
 
     my $ma = $self->{c}->mobile;
-    if ($ma->can('user_id')) {
-        if (my $user_id = $ma->user_id) {
-            if ($self->{check_ip}) {
-                my $ip = $ENV{REMOTE_ADDR} || $self->{c}->req->address || die "cannot get address";
-                if (!$ma->isa_cidr($ip)) {
-                    die "SECURITY: invalid ip($ip, $ma, $user_id)";
-                }
+    if ($ma->can('user_id') and (my $user_id = $ma->user_id)) {
+        if ($self->{check_ip}) {
+            my $ip = $ENV{REMOTE_ADDR} || $self->{c}->req->address || die "cannot get address";
+            if (!$ma->isa_cidr($ip)) {
+                die "SECURITY: invalid ip($ip, $ma, $user_id)";
             }
-            return $user_id;
-        } else {
-            die "cannot detect mobile id from $ma";
         }
+        return $user_id;
     } else {
         return '';
     }
