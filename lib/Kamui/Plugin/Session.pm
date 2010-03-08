@@ -15,8 +15,6 @@ sub register_method {
 
 package Kamui::Plugin::Session::Backend;
 use Kamui;
-#use Time::HiRes;
-#use Digest::SHA1;
 
 sub new {
     my ($class, $c) = @_;
