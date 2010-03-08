@@ -165,5 +165,11 @@ sub get {
     $obj;
 }
 
+sub remove {
+    my ($self, $class) = @_;
+    $self = $self->instance unless ref $self;
+    delete $self->{_inflated_classes}->{$class};
+}
+
 1;
 
