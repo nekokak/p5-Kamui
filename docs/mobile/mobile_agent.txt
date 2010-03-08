@@ -1,0 +1,27 @@
+Kamuiでモバイルサイトをつくるには、
+Kamui::Plugin::Mobile::Agentを有効にすることから始めましょう。
+
+>|perl|
+package MyApp::Web::Handler;
+use Kamui::Web::Handler;
+use_plugins [qw/Mobile::Agent/];
+1;
+||<
+
+このように、Kamui::Plugin::Mobile::AgentのPluginを有効にするだけです。
+これでHTTP::MobileAgent を気軽につかえるようになります。
+
+>|perl|
+package MyAPP::Web::Controller::Root;
+use Kamui::Web::Controller -base;
+
+sub do {
+    my ($class, $c) = @_;
+    $c->mobile; # HTTP::MobileAgent
+}
+||<
+
+Kamui::Plugin::Mobile::AgentではHTTP::MobileAgentがつかえるようになりますが
+Kmaui::Plugin::Mobile::AttributeではHTTP::MobileAttributeがつかえるようになります。
+
+どちらもKamuiのMobile系Pluginを使う場合に必須なPluginとなります。
