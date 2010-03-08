@@ -1,0 +1,86 @@
+KamuiではAuthorizerを色々な形でかけることができます。
+
+KamuiはPlackベースなwafなのでPlack::Middleware::Authで
+authしてもいいのですが、細かいコントロールがしたい場合があるので、
+独自実装をもっています。
+もちろんPlack::Middleware::Authを使ってもいいと思います。
+
+KamuiのAuthorizerは基本Sledgeに似た使い方になっていますが、
+一部Sledgeとはことなるので注意してください。
+
+Authorizerをつかうには
+
+>||
+package MyAPP::Web::Authorizer::BasicAuth;
+use Kamui;
+use base 'Kamui::Web::Authorizer::BasicAuth';
+my $passwd = '0000';
+sub authorize {
+    my ($class, $context) = @_;
+
+    my ($login_id, $login_pw) = $class->basic_auth($context);
+    if ($passwd eq $login_pw) {
+        return;
+    } else {
+        return $class->show_error_page;
+    }
+}
+1;
+||<
+
+このようなAuthorizerクラスを用意し、
+
+>||
+package MyAPP::Web::Controller::Root;
+use Kamui::Web::Controller -base;
+__PACKAGE__->authorizer('+MyAPP::Web::Authorizer::BasicAuth');
+||<
+
+
+このようにControllerクラスで指定するだけです。
+これで、このMyAPP::Web::Controller::Root全体にMyAPP::Web::Authorizer::BasicAuthによる
+認証がかけられます。
+
+先の例ではController単位でしか認証をかけることができませんでした。
+しかし、１Controller内のdispatchされるmethodでも
+認証をかけたいmethodとかけたくないmethod
+このmethodだけはちょっと別の認証をかけたい。。。
+なんてことがあるかもしれません。
+Kamuiではそんな事も可能です。
+
+基本的には先の例のように設定し、
+Controller全体に認証をかけたとします。
+
+>||
+package MyAPP::Web::Controller::Root;
+use Kamui::Web::Controller -base;
+__PACKAGE__->authorizer('+MyAPP::Web::Authorizer::BasicAuth');
+
+sub do_index {}
+sub do_add   {}
+sub do_edit  {}
+sub do_del   {}
+1;
+||<
+
+この例だとdo_*のメソッド全てに認証がかかりますが、
+do_indexメソッドには認証を掛けたくないんだよなぁと言う場合、
+以下のようにします。
+
+>||
+pckage MyAPP::Web::Controller::Root;
+use Kamui::Web::Controller -base;
+__PACKAGE__->authorizer('+MyAPP::Web::Authorizer::BasicAuth');
+
+sub do_index : auth('Null') {}
+sub do_add   {}
+sub do_edit  {}
+sub do_del   {}
+1;
+||<
+
+このように個別に認証をかけたいmethodのアトリビュートにauto('xxxx')と指定することで
+指定したAuthorizerがそのメソッド用に設定されます。
+
+この例ではKamui::Web::Authorizer::Nullが設定されます。
+

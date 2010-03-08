@@ -1,0 +1,16 @@
+DoCoMoではuriにguid=onなパラメータを付けることで端末番号を取得することが可能です。
+
+しかし全部の内部URLにguid=onをつけて回るのは激しくだるいのでPluginで楽をしちゃいましょう。
+
+>||
+package MyApp::Web::Handler;
+use Kamui::Web::Handler;
+use_plugins [qw/Mobile::DoCoMoGUIDFilter Mobile::Agent/];
+1;
+||<
+
+これだけです！
+Kamui::Plugin::Mobile::DoCoMoGUIDFilterを有効にするだけで全て自動対応します。
+Kamui::Plugin::Mobile::DoCoMoGUIDFilterは
+Kamui::Plugin::Mobile::(Agent|Attribute)を有効にしないとつかえないので
+一緒に有効にして下さい

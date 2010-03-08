@@ -1,8 +1,11 @@
-KamuiはSledgeとarkの好きな部分をいいとこ取りして作った
-おれおれフレームワークです。
+Kamui は psgi に対応したフレームワークです.
 
-モバイルサイトを作るときに便利なPluginも豊富にあります。
-どうぞよろしく
+Kamui は Sledge と ark を参考にして作りました.
 
-Atsushi Kobayashi (nekokak)
+Sledge の見通しの良さと ark の container 経由での
+各種API呼び出しを私なりに使い勝手が良いように構成し直しました.
+
+また、mobileサイトが簡単に作れるようにmobile用のプラグインを各種用意しておきました.
+
+Atsushi Kobayashi (id:nekokak)
 

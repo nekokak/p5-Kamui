@@ -1,0 +1,29 @@
+基本的に携帯端末でも外部CSSを扱うことは可能なので、
+デザイナーさんには外部CSSをもりもりつかったデザインを組んでもらえばよいでしょう。
+
+しかしなぜかDoCoMoの端末だけは外部CSSを扱うことができません。
+ガッデム！！
+
+しかしDoCoMo対応したいがために外部CSSを諦めて全てインライン展開するなんて
+ばからしいですよね！
+そこでKamuiではそういうケースにも対応できるPluginが用意されています。
+
+>||
+package MyApp::Web::Handler;
+use Kamui::Web::Handler;
+use_plugins [qw/Mobile::CSSFilter Mobile::Agent/];
+1;
+||<
+
+これだけです！
+このPluginを有効にし、デザイナーさんには外部CSSを使ってサイトを作ってもらいましょう。
+
+Kamui::Plugin::Mobile::CSSFilterというPluginをつかうだけで
+簡単にCSSを自動インライン化することができますので、
+DoCoMo端末でも問題なくかっちょいいCSSが効いたサイトをユーザに提供することができます。
+
+Kamui::Plugin::Mobile::CSSFilterは
+Kamui::Plugin::Mobile::(Agent|Attribute)を有効にする必要があるので
+一緒に設定してください。
+
+

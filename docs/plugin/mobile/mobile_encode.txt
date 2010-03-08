@@ -1,0 +1,26 @@
+モバイルサイトを開発する際にまず問題になるのは文字コードでしょう。
+しかし恐れることはありません。
+Kamuiでは格キャリアの文字コードを意識することなく開発することが可能です。
+
+KamuiではEncode::JP::Mobileをつかって簡単にキャリアに対応した文字コードを扱う事が可能です。
+
+さぁ、早速使ってみましょう
+
+>||
+package MyApp::Web::Handler;
+use Kamui::Web::Handler;
+use_plugins [qw/Mobile::Encode Mobile::Agent/];
+1;
+||<
+
+これだけです！
+なんて簡単なんでしょうか。
+
+Kamui::Plugin::Mobile::EncodeのPluginを有効にするだけです。
+ちなみにKamui::Plugin::Mobile::Encodeは
+Kamui::Plugin::Mobile::(Agent|Attribute)に依存しているので
+どちらかのPluginを有効にしてください。
+
+これだけで、３キャリアに対応した文字コードで入出力を管理することができます！
+
+

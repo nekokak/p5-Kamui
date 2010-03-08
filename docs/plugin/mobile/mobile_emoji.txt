@@ -1,0 +1,21 @@
+モバイルサイトを作っていると
+絵文字をばんばん使いたくなるのは必死です。
+
+しかし、３キャリア対応サイトをつくていて、それぞれのコードで絵文字を書いてしまうと、
+３キャリア毎にテンプレートをわけたりしてめんどくさいですよね。
+
+なので簡単に３キャリアに対応した絵文字を使えるようにしました。
+
+>||
+package MyApp::Web::Handler;
+use Kamui::Web::Handler;
+use_plugins [qw/Mobile::EmojiFilter/];
+1;
+||<
+
+Kamui::Plugin::Mobile::EmojiFilterを有効にするだけです！
+Pluginに有効にして、テンプレートに{emoji:XXXX}という文字列を書けば
+自動で３キャリアに対応した絵文字を出力させることができます。
+
+なおXXXXの部分はDoCoMoのunicode 16進数を指定してください。
+
