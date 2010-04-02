@@ -1,9 +1,8 @@
 package MyAPP::Web::Controller::Root;
 use Kamui::Web::Controller -base;
-use HTTP::MobileAttribute plugins => [qw/IS/];
 use Encode;
 
-#__PACKAGE__->authorizer('+MyAPP::Web::Authorizer::BasicAuth');
+__PACKAGE__->authorizer('+MyAPP::Web::Authorizer::BasicAuth');
 
 __PACKAGE__->add_trigger(
     'before_dispatch' => sub{
@@ -78,7 +77,7 @@ sub do_mobile {
     $c->stash->{method} = 'get';
 }
 
-sub do_moge : auth('Null') {
+sub do_moge : Auth('Null') {
 }
 
 sub do_json {

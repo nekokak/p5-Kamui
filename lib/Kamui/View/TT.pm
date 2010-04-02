@@ -28,7 +28,7 @@ sub render {
             c => $context,
         },
         \my $output
-    ) or die $@;
+    ) or die "error: $@";
 
     my $res = $context->res;
     $res->status('200');

@@ -46,7 +46,7 @@ my $cache = +{};
 sub attr_cache {
     my ($class, $code, $attr) = @_;
     if ($attr) {
-        (my $auth_pkg = $attr->[0]) =~ s/auth\('(.+)'\)/$1/;
+        (my $auth_pkg = $attr->[0]) =~ s/Auth\('(.+)'\)/$1/;
         $cache->{$code} = $auth_pkg;
     } else {
         return $cache->{$code};
