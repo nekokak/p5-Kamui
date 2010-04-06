@@ -21,10 +21,12 @@ sub basic_auth {
 
 sub show_error_page {
     my ($class, $context) = @_;
+
+    $context->{is_finished} = 1;
+
     my $realm = $class->realm;
 
-    # FIXME: use $context->res.
-    my $res = Kamui::Web::Response->new;
+    my $res = $context->res;
     $res->status('401');
     $res->body('not authorized');
     $res->headers(
