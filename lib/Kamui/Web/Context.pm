@@ -3,6 +3,7 @@ use Kamui;
 use Carp ();
 use HTML::FillInForm::Lite;
 use String::CamelCase qw/camelize decamelize/;
+use URI::QueryParam;
 
 sub _plugin_name {
     my $pkg = shift;
