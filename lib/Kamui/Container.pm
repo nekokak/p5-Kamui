@@ -9,6 +9,7 @@ my $_register_namespace = +{};
 
 sub import {
     my ($class, @opts) = @_;
+
     my $caller = caller;
 
     if (scalar(@opts) == 1 and ($opts[0]||'') =~ /^-base$/i) {
@@ -33,7 +34,10 @@ sub import {
         $class->_export_functions($caller => @opts);
     }
 
-    $class->_export_container($caller);
+    unless (($opts[0]||'') =~ /^-no_export$/i) {
+        $class->_export_container($caller);
+    }
+
     $class->initialize;
 }
 
