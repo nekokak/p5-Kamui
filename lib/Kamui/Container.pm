@@ -44,55 +44,64 @@ sub import {
 sub initialize {
     my $class = shift;
 
-    register(
-        $class => home => sub {
-            return dir($ENV{KAMUI_HOME}) if $ENV{KAMUI_HOME};
-            my $class = shift;
+    my $self = $class->instance unless ref $class;
 
-            $class = ref $class || $class;
-            (my $file = "${class}.pm") =~ s!::!/!g;
-            if (my $path = $INC{$file}) {
-                $path =~ s/$file$//;
-                $path = dir($path);
-                if (-d $path) {
-                    $path = $path->absolute;
-                    while ($path->dir_list(-1) =~ /^b?lib$/) {
-                        $path = $path->parent;
+    unless ($self->{_registered_classes}->{home}) {
+        register(
+            $class => home => sub {
+                return dir($ENV{KAMUI_HOME}) if $ENV{KAMUI_HOME};
+                my $class = shift;
+
+                $class = ref $class || $class;
+                (my $file = "${class}.pm") =~ s!::!/!g;
+                if (my $path = $INC{$file}) {
+                    $path =~ s/$file$//;
+                    $path = dir($path);
+                    if (-d $path) {
+                        $path = $path->absolute;
+                        while ($path->dir_list(-1) =~ /^b?lib$/) {
+                            $path = $path->parent;
+                        }
+                        return $path;
                     }
-                    return $path;
                 }
-            }
-            die 'Cannot detect home directory, please set it manually: $ENV{KAMUI_HOME}';
-        },
-    );
+                die 'Cannot detect home directory, please set it manually: $ENV{KAMUI_HOME}';
+            },
+        );
+    }
 
-    register(
-        $class => conf => sub {
-            my $class = shift;
-            my $home = $class->get('home');
+    unless ($self->{_registered_classes}->{conf}) {
+        register(
+            $class => conf => sub {
+                my $class = shift;
+                my $home = $class->get('home');
 
-            my $conf = {};
-            for my $fn (qw/config.pl config_local.pl/) {
-                my $file = $home->file($fn);
-                if (-e $file) {
-                    my $c = require $file;
-                    die 'config should return HASHREF'
-                        unless ref($c) and ref($c) eq 'HASH';
-                    $conf = { %$conf, %$c };
+                my $conf = {};
+                for my $fn (qw/config.pl config_local.pl/) {
+                    my $file = $home->file($fn);
+                    if (-e $file) {
+                        my $c = do $file;
+                        die 'config should return HASHREF'
+                            unless ref($c) and ref($c) eq 'HASH';
+                        $conf = { %$conf, %$c };
+                    }
                 }
-            }
-            $conf;
-        },
-    );
+                $conf;
+            },
+        );
+    }
 }
 
 sub _export_functions {
     my ($class, $caller, @export_names) = @_;
 
+    my $self = $class->instance unless ref $class;
+
     for my $name (@export_names) {
 
         if ($caller->can($name)) { die qq{can't export $name for $caller. $name already defined in $caller.} }
-        my $code = $_register_namespace->{$name} || sub {
+
+        my $code = $self->{_register_namespace}->{$name} || sub {
             my $target = shift;
             my $container_name = join '::', $class->base_name, camelize($name), camelize($target);
             return $target ? $class->get($container_name) : $class;
@@ -150,7 +159,7 @@ sub register_namespace {
         return $target ? $class->get($container_name) : $class;
     };
 
-    $_register_namespace->{$method} = $code;
+    $self->{_register_namespace}->{$method} = $code;
 }
 
 sub get {
