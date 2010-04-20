@@ -7,32 +7,34 @@ use UNIVERSAL::require;
 sub import {
     my $caller = caller;
 
-    my $pkg = caller(0);
     my @methods = qw/
-        new setup handler dispatcher dispatch
+        new setup handler dispatcher dispatch context_class
         use_container use_context use_dispatcher use_view use_plugins
     /;
+
     for my $meth ( @methods ) {
-        no strict 'refs';
-        *{"$pkg\::$meth"} = \&$meth;
+        no strict 'refs'; ## no critic.
+        *{"$caller\::$meth"} = \&$meth;
     }
+
+    my $_attribute = +{};
+    no strict 'refs'; ## no critic.
+    *{"$caller\::attribute"} = sub { $_attribute };
 
     goto &Kamui::import;
 }
 
-my $dispatcher;
-sub dispatcher { $dispatcher }
+sub dispatcher { $_[0]->attribute->{dispatcher} }
 sub use_dispatcher ($) { ## no critic.
     my $pkg = shift;
     $pkg->use or die $@;
-    $dispatcher = $pkg;
+    caller(0)->attribute->{dispatcher} = $pkg;
 }
 
-my $view;
 sub use_view ($) { ## no critic.
     my $pkg = shift;
-    $pkg->use or die;
-    $view = $pkg;
+    $pkg->use or die $@;
+    caller(0)->attribute->{view} = $pkg;
 }
 
 sub use_container($) { ## no critic.
@@ -40,39 +42,37 @@ sub use_container($) { ## no critic.
     $container->use or die $@;
 }
 
-my $context_class;
+sub context_class { $_[0]->attribute->{context_class} }
 sub use_context ($) { ## no critic.
     my $pkg = shift;
     $pkg->use or die $@;
-    $context_class = $pkg;
+    caller(0)->attribute->{context_class} = $pkg;
 }
 
-my $plugins = [];
 sub use_plugins ($) { ## no critic.
     my $pkgs = shift;
-    $plugins = $pkgs;
+    caller(0)->attribute->{plugins} = $pkgs;
 }
 
 sub new {
     my $class = shift;
 
-    $context_class ||= 'Kamui::Web::Context';
-    $context_class->load_plugins($plugins);
+    my $context_class = $class->context_class || do {
+        'Kamui::Web::Context'->use or die $@;
+        $class->attribute->{context_class} = 'Kamui::Web::Context';
+    };
+    $context_class->load_plugins($class->attribute->{plugins});
+
+    $class->dispatcher or do {
+        my $dispatch_class = join '::', $class->base_name, 'Web', 'Dispatcher';
+        $class->attribute->{dispatcher} = $dispatch_class;
+    };
 
     bless {}, $class;
 }
 
 
-sub setup {
-    my $self = shift;
-
-    $dispatcher || do {
-        my $dispatch_class = join '::', $self->base_name, 'Web', 'Dispatcher';
-        use_dispatcher($dispatch_class);
-    };
-
-    $self;
-}
+sub setup { warn 'setup method is deprecated'; shift }
 
 sub handler {
     my $self = shift;
@@ -80,10 +80,10 @@ sub handler {
     sub {
         my $env = shift;
 
-        my $context = $context_class->new(
+        my $context = $self->context_class->new(
             env           => $env,
             dispatch_rule => +{},
-            view          => $view || 'Kamui::View::TT',
+            view          => $self->attribute->{view} || 'Kamui::View::TT',
             conf          => container('conf'),
             app           => $self,
         );
