@@ -5,8 +5,6 @@ use UNIVERSAL::require;
 use String::CamelCase qw/camelize/;
 use Path::Class qw/file dir/;
 
-my $_register_namespace = +{};
-
 sub import {
     my ($class, @opts) = @_;
 
