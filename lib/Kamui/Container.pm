@@ -28,7 +28,7 @@ sub import {
 
         return;
     }
-    elsif(@opts) {
+    elsif(scalar(@opts) >= 1 and ($opts[0]||'') !~ /^-no_export/i) {
         $class->_export_functions($caller => @opts);
     }
 
