@@ -3,6 +3,7 @@ use Kamui;
 use Kamui::Web::Context;
 use Kamui::Web::Controller;
 use UNIVERSAL::require;
+use Data::Dumper;
 
 sub import {
     my $caller = caller;
@@ -104,12 +105,12 @@ sub dispatch {
 
     my $controller = $context->dispatch_rule->{controller}||'';
     ($controller && $controller->use) or do {
-        warn "[404] controller : $controller $@";
+        warn "[404] controller : $controller $@ (@[{$context->{env}->{PATH_INFO}}])";
         return $context->handle_404;
     };
 
     my $action = $context->dispatch_rule->{action} or do {
-        warn "[500] controller : $controller, action : $context->dispatch_rule->{action} $@";
+        warn "[500] controller : $controller, action : $context->dispatch_rule->{action} $@ (@[{$context->{env}->{PATH_INFO}}])";
         return $context->handle_404;
     };
 
