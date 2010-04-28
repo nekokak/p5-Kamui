@@ -105,12 +105,12 @@ sub dispatch {
 
     my $controller = $context->dispatch_rule->{controller}||'';
     ($controller && $controller->use) or do {
-        warn "[404] controller : $controller $@ (@[{$context->{env}->{PATH_INFO}}])";
+        warn "[404] controller : $controller $@ (path: $context->{env}->{PATH_INFO})";
         return $context->handle_404;
     };
 
     my $action = $context->dispatch_rule->{action} or do {
-        warn "[500] controller : $controller, action : $context->dispatch_rule->{action} $@ (@[{$context->{env}->{PATH_INFO}}])";
+        warn "[500] controller : $controller, action : $context->dispatch_rule->{action} $@ (path: $context->{env}->{PATH_INFO})";
         return $context->handle_404;
     };
 
