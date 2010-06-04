@@ -115,6 +115,7 @@ sub finalize {
         $self->{state}->finalize($res);
         $self->_set_session_data( $sid, $self->{session_data} );
     }
+    delete $self->{store};
 }
 
 sub _initialize_session_data {
