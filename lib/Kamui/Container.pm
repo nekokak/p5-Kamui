@@ -1,6 +1,7 @@
 package Kamui::Container;
 use Kamui;
 use base 'Class::Singleton';
+use Cwd qw/realpath/;
 use UNIVERSAL::require;
 use String::CamelCase qw/camelize/;
 use Path::Class qw/file dir/;
@@ -53,8 +54,9 @@ sub initialize {
                 $class = ref $class || $class;
                 (my $file = "${class}.pm") =~ s!::!/!g;
                 if (my $path = $INC{$file}) {
-                    $path =~ s/$file$//;
-                    $path = dir($path);
+                    my $realpath = realpath($path);
+                    $realpath =~ s/$file$//;
+                    $path = dir($realpath);
                     if (-d $path) {
                         $path = $path->absolute;
                         while ($path->dir_list(-1) =~ /^b?lib$/) {
