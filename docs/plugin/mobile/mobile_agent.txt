@@ -21,7 +21,6 @@ sub do {
 }
 ||<
 
-Kamui::Plugin::Mobile::AgentではHTTP::MobileAgentがつかえるようになりますが
-Kmaui::Plugin::Mobile::AttributeではHTTP::MobileAttributeがつかえるようになります。
+Kamui::Plugin::Mobile::AgentではHTTP::MobileAgentがつかえるようになります。
 
 どちらもKamuiのMobile系Pluginを使う場合に必須なPluginとなります。

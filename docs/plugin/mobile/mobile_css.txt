@@ -23,7 +23,6 @@ Kamui::Plugin::Mobile::CSSFilterというPluginをつかうだけで
 DoCoMo端末でも問題なくかっちょいいCSSが効いたサイトをユーザに提供することができます。
 
 Kamui::Plugin::Mobile::CSSFilterは
-Kamui::Plugin::Mobile::(Agent|Attribute)を有効にする必要があるので
-一緒に設定してください。
+Kamui::Plugin::Mobile::Agentを有効にする必要があるので一緒に設定してください。
 
 

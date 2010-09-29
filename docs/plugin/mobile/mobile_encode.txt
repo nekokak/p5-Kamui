@@ -18,8 +18,7 @@ use_plugins [qw/Mobile::Encode Mobile::Agent/];
 
 Kamui::Plugin::Mobile::EncodeのPluginを有効にするだけです。
 ちなみにKamui::Plugin::Mobile::Encodeは
-Kamui::Plugin::Mobile::(Agent|Attribute)に依存しているので
-どちらかのPluginを有効にしてください。
+Kamui::Plugin::Mobile::Agentに依存しているのでPluginを有効にしてください。
 
 これだけで、３キャリアに対応した文字コードで入出力を管理することができます！
 

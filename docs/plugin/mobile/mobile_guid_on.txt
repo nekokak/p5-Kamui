@@ -12,5 +12,4 @@ use_plugins [qw/Mobile::DoCoMoGUIDFilter Mobile::Agent/];
 これだけです！
 Kamui::Plugin::Mobile::DoCoMoGUIDFilterを有効にするだけで全て自動対応します。
 Kamui::Plugin::Mobile::DoCoMoGUIDFilterは
-Kamui::Plugin::Mobile::(Agent|Attribute)を有効にしないとつかえないので
-一緒に有効にして下さい
+Kamui::Plugin::Mobile::Agentを有効にしないとつかえないので一緒に有効にして下さい

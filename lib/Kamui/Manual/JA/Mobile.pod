@@ -9,7 +9,7 @@ Kamuiではデフォルトでモバイル用Pluginが用意されています。
 
 =head1 HOW TO ADD MOBILE PHONE SUPPORT
 
-=head2 HTTP::Mobile(Agent|Attribute) との連携
+=head2 HTTP::MobileAgent との連携
 
     package MyApp::Web::Handler;
     use Kamui::Web::Handler;
@@ -27,23 +27,6 @@ HTTP::MobileAgent を気軽につかえるようになります。
         $c->mobile; # HTTP::MobileAgent
     }
 
-HTTP::MobileAttributeを利用する場合は
-
-    package MyApp::Web::Handler;
-    use Kamui::Web::Handler;
-    use_plugins [qw/Mobile::Attribute/];
-    1;
-
-とするだけで、HTTP::MobileAttributeを気軽に使えるようになります。
-
-    package MyAPP::Web::Controller::Root;
-    use Kamui::Web::Controller -base;
-    
-    sub do {
-        my ($class, $c) = @_;
-        $c->mobile; # HTTP::MobileAttribute
-    }
-
 =head2 Encode::JP::Mobile との連携
 
 絵文字を扱うには L<Encode::JP::Mobile> をつかうとよいのですが、
@@ -55,7 +38,7 @@ response時のcontent-typeの設定などを行ってくれます。
     use_plugins [qw/Mobile::Encode Mobile::Agent/];
     1;
 
-Kamui::Plugin::Mobile::EncodeはKamui::Plugin::Mobile::(Agent|Attribute)を一緒に
+Kamui::Plugin::Mobile::EncodeはKamui::Plugin::Mobile::Agentを一緒に
 使う必要がありますので注意してください。
 
 Kamui::Plugin::Mobile::Encodeを使えば簡単にキャリアに対応した文字コードを取り扱う事ができるので
@@ -74,7 +57,7 @@ docomoの端末では外部CSSを利用することができないので、レ�
 
 このようにPluginを有効にしておくだけでdocomoの端末の場合に勝手にCSSをインライン化してくれます。
 なお、Kamui::Plugin::Mobile::CSSFilterには
-Kamui::Plugin::Mobile::Agent もしくは Kamui::Plugin::Mobile::AttributeのどちらかのPluginを
+Kamui::Plugin::Mobile::AgentのPluginを
 有効にしておく必要があります。
 
 =head2 docomo guid
@@ -90,7 +73,7 @@ Kamui::Plugin::Mobile::DoCoMoGUIDFilterを利用すれば
     1;
 
 このKamui::Plugin::Mobile::DoCoMoGUIDFilterでは
-Kamui::Plugin::Mobile::AgentもしくはKamui::Plugin::Mobile::AttributeのどちらかのPluginを
+Kamui::Plugin::Mobile::AgentのPluginを
 有効にしておく必要があります。
 
 =head2 簡単絵文字利用　

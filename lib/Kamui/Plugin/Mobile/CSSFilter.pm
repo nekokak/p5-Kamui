@@ -42,28 +42,11 @@ sub finalize {
         && $res->body )
     {
         my $body = $res->body;
-        my $inliner = Kamui::Plugin::Mobile::CSSFilter::MobileJpCSS->new(
+        my $inliner = HTML::MobileJpCSS->new(
             agent    => ( $self->c->mobile || '' ),
             %{$self->c->conf->{plugins}->{mobile}->{css_filter}},
         );
         $res->body( $inliner->apply($body) );
-    }
-}
-
-package Kamui::Plugin::Mobile::CSSFilter::MobileJpCSS;
-use Kamui;
-use base 'HTML::MobileJpCSS';
-
-# HTML::MobileJpCSS がまだMobileAgentにしか対応していないので、
-# 取りあえずアドホックにラップしておく
-
-sub _init {
-    my $self = shift;
-    if ($self->{agent}) {
-        $self->{agent} = HTTP::MobileAgent->new($self->{agent}) unless (ref $self->{agent}) =~ /^HTTP::Mobile(Agent|Attribute)/;
-    }
-    else {
-        $self->{agent} = HTTP::MobileAgent->new();
     }
 }
 
