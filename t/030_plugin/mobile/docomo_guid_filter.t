@@ -3,7 +3,7 @@ use Test::More;
 use Kamui::Web::Context;
 use Mock::Web::Handler;
 
-my $plugins = [qw/Encode Mobile::Attribute Mobile::DoCoMoGUIDFilter/];
+my $plugins = [qw/Encode Mobile::Agent Mobile::DoCoMoGUIDFilter/];
 Kamui::Web::Context->load_plugins($plugins);
 
 subtest 'carrier docomo test' => sub {

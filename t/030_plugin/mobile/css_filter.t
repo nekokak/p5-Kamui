@@ -4,7 +4,7 @@ use Kamui::Web::Context;
 use Mock::Web::Handler;
 use Mock::Container;
 
-my $plugins = [qw/Encode Mobile::Attribute Mobile::CSSFilter/];
+my $plugins = [qw/Encode Mobile::Agent Mobile::CSSFilter/];
 Kamui::Web::Context->load_plugins($plugins);
 
 subtest 'non mobile test' => sub {
