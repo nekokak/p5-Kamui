@@ -17,6 +17,8 @@ requires 'Class::Trigger';
 requires 'Class::Data::Inheritable';
 requires 'Template';
 requires 'Template::Stash::EscapeHTML';
+requires 'Scalar::Util';
+requires 'FormValidator::Lite';
 
 test_requires 'Test::More';
 test_requires 'Test::Exception';

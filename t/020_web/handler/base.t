@@ -8,7 +8,6 @@ my $psgi_handler;
 
 Kamui::Web::Context->load_plugins([qw/Encode/]);
 my $app = Mock::Web::Handler->new;
-$app->setup;
 $psgi_handler = $app->handler;
 
 subtest 'simple handler test' => sub {

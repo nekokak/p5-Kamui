@@ -4,6 +4,13 @@ use Kamui::Web::Context;
 use Mock::Web::Handler;
 use Mock::Container;
 
+BEGIN {
+    eval "use HTTP::MobileAgent";
+    plan skip_all => 'needs HTP::MobileAgent for testing' if $@;
+    eval "use HTML::MobileJpCSS";
+    plan skip_all => 'needs HTML::MobileJpCSS for testing' if $@;
+};
+
 my $plugins = [qw/Encode Mobile::Agent Mobile::CSSFilter/];
 Kamui::Web::Context->load_plugins($plugins);
 

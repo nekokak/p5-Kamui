@@ -3,6 +3,11 @@ use Test::More;
 use Kamui::Web::Context;
 use Mock::Web::Handler;
 
+BEGIN {
+    eval "use HTTP::MobileAgent";
+    plan skip_all => 'needs HTP::MobileAgent for testing' if $@;
+};
+
 my $plugins = [qw/Encode Mobile::EmojiFilter/];
 Kamui::Web::Context->load_plugins($plugins);
 

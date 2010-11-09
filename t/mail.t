@@ -2,7 +2,12 @@ use t::Utils;
 use Test::More;
 use Test::Exception;
 use IO::Scalar;
-use Email::MIME::JP::Mobile;
+
+BEGIN {
+    eval "use Email::MIME::JP::Mobile";
+    plan skip_all => 'needs Email::MIME::JP::Mobile for testing' if $@;
+};
+
 use Kamui::Mail;
 use Mock::Container;
 
