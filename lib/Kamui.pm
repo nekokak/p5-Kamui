@@ -27,7 +27,7 @@ sub base_name {
 
 sub load_class {
     my ($class, $pkg) = @_;
-    $pkg->require or Carp::croak $@;
+    $pkg->require or Carp::confess $@;
 }
 
 1;
