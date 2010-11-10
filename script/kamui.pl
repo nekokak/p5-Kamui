@@ -16,15 +16,22 @@ my $confsrc = <<'...';
 -- lib/$path.pm
 package [%= $module %];
 1;
--- lib/$path/Web/Handler.pm
-package [%= $module %]::Web::Handler;
-use Kamui::Web::Handler;
+-- lib/$path/Web.pm
+package [%= $module %]::Web;
+use Kamui;
+use base 'Kamui::Web';
 
-use_container '[%= $module %]::Container';
-use_context '[%= $module %]::Web::Context';
-use_dispatcher '[%= $module %]::Web::Dispatcher';
-use_plugins [qw/Encode/];
-use_view 'Kamui::View::MT';
+use [%= $module %]::Web::Context;
+sub context    {'[%= $module %]::Web::Context'}
+
+use [%= $module %]::Web::Dispatcher;
+sub dispatcher {'[%= $module %]::Web::Dispatcher'}
+
+sub view       {'Kamui::View::TT'}
+sub plugins    {['Encode']}
+
+use [%= $module %]::Container -no_export;
+sub container  { [%= $module %]::Container->instance }
 
 1;
 -- lib/$path/Web/Dispatcher.pm
