@@ -2,7 +2,6 @@ package Kamui::Container;
 use Kamui;
 use base 'Class::Singleton';
 use Cwd qw/realpath/;
-use UNIVERSAL::require;
 use String::CamelCase qw/camelize/;
 use Path::Class qw/file dir/;
 
