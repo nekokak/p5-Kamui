@@ -11,7 +11,7 @@ sub import {
     no strict 'refs';
     unshift @{"$caller\::ISA"}, 'Class::Data::Inheritable';
     $caller->mk_classdata('dispatch_table' => []);
-    *{"$caller\::$_"} = *{$_} for qw/on run camelize_path determine TRUE FALSE/;
+    *{"$caller\::$_"} = *{$_} for qw/on run determine TRUE FALSE/;
 
     goto &Kamui::import;
 }
@@ -22,17 +22,6 @@ sub on ($$)  { ## no critic.
 }
 
 sub run (&) {shift} ## no critic.
-
-my $camelize_path_cache;
-sub camelize_path {
-    my $path = shift;
-    if (my $class = $camelize_path_cache->{$path}) {
-        return $class;
-    } else {
-        $camelize_path_cache->{$path} = join '::', map {camelize $_} split '/', $path;
-        return $camelize_path_cache->{$path};
-    }
-}
 
 sub determine {
     my ($class, $context) = @_;
