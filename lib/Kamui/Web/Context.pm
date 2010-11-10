@@ -1,9 +1,7 @@
 package Kamui::Web::Context;
 use Kamui;
 use Carp ();
-use HTML::FillInForm::Lite;
 use String::CamelCase qw/camelize decamelize/;
-use URI::QueryParam;
 
 sub _plugin_name {
     my $pkg = shift;
@@ -127,6 +125,7 @@ sub fillin_form {
     my $fdat = $self->fillin_fdat;
     return $res unless $fdat;
 
+    $self->app->load_class('HTML::FillInForm::Lite');
     my $body = $res->body;
     $res->body(
         HTML::FillInForm::Lite->fill(\$body, $fdat)
@@ -233,7 +232,6 @@ sub uri_with {
     } );
     return $uri;
 }
-
 
 sub handle_404 {
     my $self = shift;
