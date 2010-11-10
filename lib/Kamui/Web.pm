@@ -1,5 +1,6 @@
 package Kamui::Web;
 use Kamui;
+use UNIVERSAL::require;
 
 sub dispatcher { die 'this method is abstract: dispatch'  }
 sub view       { die 'this method is abstract: view'      }
@@ -46,10 +47,13 @@ sub dispatch {
     my ($self, $context) = @_;
 
     my $controller = $context->dispatch_rule->{controller}||'';
-    ($controller && $controller->use) or do {
-        warn "[404] controller : $controller $@ (path: $context->{env}->{PATH_INFO})";
-        return $context->handle_404;
-    };
+    unless ($self->{_controller}->{$controller}) {
+        $controller->use or do {
+            warn "[404] controller : $controller $@ (path: $context->{env}->{PATH_INFO})";
+            return $context->handle_404;
+        };
+        $self->{_controller}->{$controller}=1;
+    }
 
     my $action = $context->dispatch_rule->{action} or do {
         warn "[500] controller : $controller, action : $context->dispatch_rule->{action} $@ (path: $context->{env}->{PATH_INFO})";
