@@ -6,8 +6,8 @@ use Kamui::Web::Context;
 subtest 'subclass subclass hook test' => sub {
     my $c = Kamui::Web::Context->new;
     Mock::Web::Controller::HookTest::Foo::Bar->call_trigger('before_dispatch' => $c);
-    is $c->stash->{before_dispatch_hook}, 'called';
-    is $c->stash->{before_dispatch_hook_foo}, 'called';
+    ok not $c->stash->{before_dispatch_hook};
+    ok not $c->stash->{before_dispatch_hook_foo};
     is $c->stash->{before_dispatch_hook_foo_bar}, 'called';
     done_testing;
 };

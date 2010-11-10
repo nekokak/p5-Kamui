@@ -1,6 +1,5 @@
 package Kamui::Web::Controller;
 use Kamui;
-use Class::Trigger qw/before_dispatch after_dispatch/;
 
 sub import {
     my ($class, $opt) = @_;
@@ -16,8 +15,30 @@ sub import {
                 $_auth = $pkg if $pkg;
                 $_auth;
             };
+            my $_trigger = +{
+                before_dispatch => [],
+                after_dispatch  => [],
+            };
+            *{"${caller}::_trigger"} = sub {
+                my ($class, $name, $code) = @_;
+                push @{$_trigger->{$name}}, $code if $code;
+                $_trigger->{$name};
+            };
         }
         goto &Kamui::import;
+    }
+}
+
+sub add_trigger {
+    my ($class, $name, $code) = @_;
+    $class->_trigger($name, $code);
+    return;
+}
+sub call_trigger {
+    my ($class, $name, $c, $args) = @_;
+
+    for my $code (@{$class->_trigger($name)}) {
+        $code->($class, $c, $args);
     }
 }
 

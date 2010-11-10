@@ -3,7 +3,6 @@ use Test::More;
 use Mock::Web::Controller::HookTest;
 use Kamui::Web::Context;
 
-
 my $c = Kamui::Web::Context->new;
 
 subtest 'register_hook' => sub {
