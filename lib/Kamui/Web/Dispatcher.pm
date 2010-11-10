@@ -8,7 +8,11 @@ sub import {
         no strict 'refs';
         *{"$caller\::$_"} = *{$_} for qw/on run determine TRUE FALSE/;
         my $_dispatch_table = [];
-        *{"$caller\::_dispatch_table"} = sub : lvalue { $_dispatch_table }
+        *{"$caller\::_dispatch_table"} = sub {
+            my ($class, $table) = @_;
+            $_dispatch_table = $table if $table;
+            $_dispatch_table;
+        }
     }
 
     goto &Kamui::import;
@@ -19,7 +23,7 @@ sub FALSE() { 0 }
 
 sub on ($$)  { ## no critic.
     my $class = caller(0);
-    $class->_dispatch_table = [@{$class->_dispatch_table}, { regexp => qr{^$_[0]$}, code => $_[1] }];
+    $class->_dispatch_table([@{$class->_dispatch_table}, { regexp => qr{^$_[0]$}, code => $_[1] }]);
 }
 
 sub run (&) {shift} ## no critic.
