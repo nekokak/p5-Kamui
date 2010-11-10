@@ -21,6 +21,8 @@ sub handler {
     sub {
         my $env = shift;
 
+        $env->{PATH_INFO} ||= '/';
+
         my $context = $self->context->new(
             env           => $env,
             dispatch_rule => +{},
