@@ -3,12 +3,20 @@ use Test::More;
 use Kamui::Web::Context;
 use Mock::Container;
 use Mock::Web::Handler;
-use Cache::Memcached::Fast;
 
 BEGIN {
-    my $memd = Cache::Memcached::Fast->new({servers => ['127.0.0.1:11211']});
-    my $version = $memd->server_versions;
-    plan skip_all => 'can not access local memcached' unless scalar(keys %$version);
+    eval "use Cache::Memcached::Fast";
+    plan skip_all => 'needs Cache::Memcached::Fast for testing' if $@;
+
+    my $memd = Cache::Memcached::Fast->new(
+        {
+            servers => [qw/127.0.0.1:11211/],
+        }
+    );
+
+    unless (keys %{$memd->server_versions}) {
+        plan skip_all => 'memcached server missing. skip testing';
+    }
 };
 
 my $plugins = [qw/Session/];
