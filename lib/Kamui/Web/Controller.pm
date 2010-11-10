@@ -1,9 +1,6 @@
 package Kamui::Web::Controller;
 use Kamui;
-use base qw/Class::Data::Inheritable/;
 use Class::Trigger qw/before_dispatch after_dispatch/;
-
-__PACKAGE__->mk_classdata('authorizer');
 
 sub import {
     my ($class, $opt) = @_;
@@ -13,9 +10,20 @@ sub import {
         {
             no strict 'refs';
             push @{"${caller}::ISA"}, $class;
+            my $_auth='';
+            *{"${caller}::_auth"} = sub {
+                my ($class, $pkg) = @_;
+                $_auth = $pkg if $pkg;
+                $_auth;
+            };
         }
         goto &Kamui::import;
     }
+}
+
+sub authorizer {
+    my ($class, $pkg) = @_;
+    $class->_auth($pkg);
 }
 
 sub _load_auth_class {
