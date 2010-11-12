@@ -178,6 +178,15 @@ sub redirect {
     $self->{is_finished} = 1;
     $self->res->content_type("text/html");
     $self->res->redirect($uri->as_string);
+    $self->detach;
+}
+
+our $DETACH = 'KAMUI_DETACH';
+sub detach { die $DETACH }
+sub is_detach {
+    my ($self, $detach) = @_;
+    return unless $detach;
+    $detach =~ /^${DETACH} at/;
 }
 
 sub initialize {

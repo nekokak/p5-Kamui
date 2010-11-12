@@ -69,20 +69,16 @@ sub dispatch {
 
         eval {
             $controller->authorize($dispatch_code, $context);
-            return if $context->is_finished;
-
-            $controller->call_trigger('before_dispatch', $context, $context->dispatch_rule->{args});
-            return if $context->is_finished;
-
-            $controller->$method($context, $context->dispatch_rule->{args});
-            return if $context->is_finished;
-
-            $controller->call_trigger('after_dispatch', $context, $context->dispatch_rule->{args});
-            return if $context->is_finished;
-
-            $context->render;
+            unless ($context->is_finished) {
+                $controller->call_trigger('before_dispatch', $context, $context->dispatch_rule->{args});
+                $controller->$method($context, $context->dispatch_rule->{args});
+                $controller->call_trigger('after_dispatch', $context, $context->dispatch_rule->{args});
+                $context->render;
+            }
         };
-        if ($@) {
+        return if $context->is_detach($@);
+
+        if($@) {
             warn $@;
             $context->handle_500;
         }
