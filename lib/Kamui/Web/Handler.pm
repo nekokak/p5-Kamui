@@ -36,10 +36,9 @@ sub handler {
         my $rule = $self->dispatcher->determine($context);
         $context->dispatch_rule($rule);
 
-        my $response = $self->dispatch($context);
-        $context->finalize($response);
+        $self->dispatch($context);
 
-        $response->finalize;
+        $context->finalize;
     };
 }
 
@@ -68,23 +67,29 @@ sub dispatch {
 
     if (my $dispatch_code = $controller->can($method)) {
 
-        $controller->authorize($dispatch_code, $context);
-        return $context->res if $context->is_finished;
+        eval {
+            $controller->authorize($dispatch_code, $context);
+            return if $context->is_finished;
 
-        $controller->call_trigger('before_dispatch', $context, $context->dispatch_rule->{args});
-        return $context->res if $context->is_finished;
+            $controller->call_trigger('before_dispatch', $context, $context->dispatch_rule->{args});
+            return if $context->is_finished;
 
-        $controller->$method($context, $context->dispatch_rule->{args});
-        return $context->res if $context->is_finished;
+            $controller->$method($context, $context->dispatch_rule->{args});
+            return if $context->is_finished;
 
-        $controller->call_trigger('after_dispatch', $context, $context->dispatch_rule->{args});
-        return $context->res if $context->is_finished;
+            $controller->call_trigger('after_dispatch', $context, $context->dispatch_rule->{args});
+            return if $context->is_finished;
 
-        return $context->render;
+            $context->render;
+        };
+        if ($@) {
+            warn $@;
+            $context->handle_500;
+        }
 
     } else {
         warn q{can not find dispatch method.};
-        return $context->handle_404;
+        $context->handle_404;
     }
 }
 

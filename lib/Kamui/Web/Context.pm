@@ -200,17 +200,18 @@ sub initialize_plugins {
 }
 
 sub finalize {
-    my ($self, $response) = @_;
+    my $self = shift;
 
-    $self->finalize_plugins($response);
+    $self->finalize_plugins;
     $self->finalize_encoding;
+    $self->res->finalize;
 }
 
 sub finalize_plugins {
-    my ($self, $response) = @_;
+    my $self = shift;
 
     for my $plugin (@{$self->_plugins('finalize')}) {
-        $self->$plugin->finalize($response);
+        $self->$plugin->finalize($self->res);
     }
 }
 

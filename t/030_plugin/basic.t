@@ -40,6 +40,7 @@ subtest 'finalize test' => sub {
         env => $env,
         app => 'Mock::Web::Handler',
     );
+    $c->res->status('200');
     is $c->fin->call, 'finalize';
     stdout_is(sub { $c->finalize }, 'call finalize hook');
     done_testing;
