@@ -3,12 +3,8 @@ use Test::More;
 use Mock::Web::Handler;
 use Kamui::Web::Context;
 
-
-my $psgi_handler;
-
-Kamui::Web::Context->load_plugins([qw/Encode/]);
 my $app = Mock::Web::Handler->new;
-$psgi_handler = $app->handler;
+my $psgi_handler = $app->handler;
 
 subtest 'simple handler test' => sub {
     my $env = +{

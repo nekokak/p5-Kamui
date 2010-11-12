@@ -8,7 +8,7 @@ subtest 'redirect' => sub {
     my $c = Kamui::Web::Context->new(
         app => 'Mock::Web::Handler',
     );
-    throws_ok(sub {$c->redirect('/')}, qr/^KAMUI_DETACH at/);
+    $c->redirect('/');
     my $res = $c->res;
     isa_ok $res, 'Kamui::Web::Response';
     is $res->status, '302';

@@ -29,11 +29,10 @@ sub render {
     $output .= $json;
     $output .= ");"   if $cb;
 
-    my $res = $context->res;
-    $res->status('200');
-    $res->body($output);
-    $res->headers([ 'Content-Type' => $content_type ]);
-    $res;
+    $context->res->status('200');
+    $context->res->body($output);
+    $context->res->headers([ 'Content-Type' => $content_type ]);
+    $context->res;
 }
 
 sub _validate_callback_param {                                                                                                                              

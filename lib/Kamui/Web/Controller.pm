@@ -6,24 +6,46 @@ sub import {
 
     if (($opt||'') =~ /^-base$/i) {
         my $caller = caller(0);
+
         {
             no strict 'refs';
             push @{"${caller}::ISA"}, $class;
+        }
+
+        {
             my $_auth='';
-            *{"${caller}::_auth"} = sub {
+            my $code = sub {
                 my ($class, $pkg) = @_;
                 $_auth = $pkg if $pkg;
                 $_auth;
             };
+            no strict 'refs';
+            *{"${caller}::_auth"} = $code;
+        }
+
+        {
             my $_trigger = +{
                 before_dispatch => [],
                 after_dispatch  => [],
             };
-            *{"${caller}::_trigger"} = sub {
+            my $code = sub {
                 my ($class, $name, $code) = @_;
                 push @{$_trigger->{$name}}, $code if $code;
                 $_trigger->{$name};
             };
+            no strict 'refs';
+            *{"${caller}::_trigger"} = $code;
+        }
+
+        {
+            my $_cache = +{};
+            my $code = sub {
+                my ($class, $code, $pkg) = @_;
+                $_cache->{$code} = $pkg if $pkg;
+                $_cache->{$code};
+            };
+            no strict 'refs';
+            *{"${caller}::_cache"} = $code;
         }
         goto &Kamui::import;
     }
@@ -34,11 +56,13 @@ sub add_trigger {
     $class->_trigger($name, $code);
     return;
 }
+
 sub call_trigger {
     my ($class, $name, $c, $args) = @_;
 
     for my $code (@{$class->_trigger($name)}) {
-        $code->($class, $c, $args);
+        my $res = $code->($class, $c, $args);
+        return $res if ref($res) eq 'Kamui::Web::Response';
     }
 }
 
@@ -71,14 +95,14 @@ sub authorize {
     return;
 }
 
-my $cache = +{};
 sub attr_cache {
     my ($class, $code, $attr) = @_;
+
     if ($attr) {
         (my $auth_pkg = $attr->[0]) =~ s/Auth\('(.+)'\)/$1/;
-        $cache->{$code} = $auth_pkg;
+        $class->_cache($code, $auth_pkg);
     } else {
-        return $cache->{$code};
+        $class->_cache($code);
     }
 }
 

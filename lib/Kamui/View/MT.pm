@@ -41,11 +41,10 @@ sub render {
     );
     my $output = $mt->render($template)->as_string;
 
-    my $res = $context->res;
-    $res->status('200');
-    $res->body($output);
-    $res->headers([ 'Content-Type' => 'text/html' ]);
-    $res;
+    $context->res->status('200');
+    $context->res->body($output);
+    $context->res->headers([ 'Content-Type' => 'text/html' ]);
+    $context->res;
 }
 
 1;

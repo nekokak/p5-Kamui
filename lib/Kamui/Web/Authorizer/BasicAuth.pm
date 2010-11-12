@@ -26,17 +26,16 @@ sub show_error_page {
 
     my $realm = $class->realm;
 
-    my $res = $context->res;
-    $res->status('401');
-    $res->body('not authorized');
-    $res->headers(
+    $context->res->status('401');
+    $context->res->body('not authorized');
+    $context->res->headers(
         [
             "Content-Type"     => "text/plain",
             "Content-Length"   => 21,
             "WWW-Authenticate" => qq{Basic realm="$realm"}
         ]
     );
-    $res;
+    return;
 }
 
 1;
