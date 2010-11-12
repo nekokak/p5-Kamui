@@ -9,11 +9,24 @@ sub _plugin_name {
     return $pkg;
 }
 
-my @initialize_plugins;
-my @finalize_plugins;
 sub load_plugins {
     my ($class, $plugins) = @_;
     $class = ref $class || $class;
+
+    unless ($class->can('_plugins')) {
+        my $_plugins = +{
+            initialize => [],
+            finalize   => [],
+        };
+        my $code = sub {
+            my ($class, $key, $method) = @_;
+            push @{$_plugins->{$key}}, $method if $method;
+            $_plugins->{$key};
+        };
+
+        no strict 'refs';
+        *{"$class\::_plugins"} = $code;
+    }
 
     for my $plugin (@{$plugins}) {
         my $pkg = _plugin_name($plugin);
@@ -23,10 +36,10 @@ sub load_plugins {
         while (my($method, $initialize_code) = each %{ $register_methods }) {
 
             if ($pkg->do_initialize) {
-                push @initialize_plugins, $method;
+                $class->_plugins('initialize', $method);
             }
             if ($pkg->do_finalize) {
-                push @finalize_plugins, $method;
+                $class->_plugins('finalize', $method);
             }
             my $code = sub {
                 my $context = shift;
@@ -190,7 +203,7 @@ sub initialize {
 sub initialize_plugins {
     my $self = shift;
 
-    for my $plugin (@initialize_plugins) {
+    for my $plugin (@{$self->_plugins('initialize')}) {
         $self->$plugin->initialize;
     }
 }
@@ -205,7 +218,7 @@ sub finalize {
 sub finalize_plugins {
     my ($self, $response) = @_;
 
-    for my $plugin (@finalize_plugins) {
+    for my $plugin (@{$self->_plugins('finalize')}) {
         $self->$plugin->finalize($response);
     }
 }
