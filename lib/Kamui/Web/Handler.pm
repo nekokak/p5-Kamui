@@ -47,7 +47,7 @@ sub dispatch {
 
     my $controller = $context->dispatch_rule->{controller}||'';
     unless ($self->{_controller}->{$controller}) {
-        $controller->use or do {
+        ($controller && $controller->use) or do {
             warn "[404] controller : $controller $@ (path: $context->{env}->{PATH_INFO})";
             return $context->handle_404;
         };
