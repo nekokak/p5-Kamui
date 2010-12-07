@@ -25,6 +25,7 @@ HTML::MobileJpCSSに渡す設定をconfigに書いてください
 package Kamui::Plugin::Mobile::CSSFilter::Backend;
 use Kamui;
 use Scalar::Util ();
+use HTML::MobileJpCSS;
 
 sub new {
     my ($class, $c) = @_;
