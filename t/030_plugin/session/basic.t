@@ -58,11 +58,12 @@ subtest 'test regenerate method' => sub {
     done_testing;
 };
 
+my $res;
 subtest 'test finalize method' => sub {
     $c->res->status(200);
     $c->session->finalize($c->res);
     ok $c->res->cookies;
-    my $res = $c->res->finalize;
+    $res = $c->res->finalize;
     is $res->[1]->[0], 'Set-Cookie';
     done_testing;
 };
@@ -70,7 +71,7 @@ subtest 'test finalize method' => sub {
 subtest 'next request test' => sub {
     my $prev_rquest_session_id = $c->session->{session_id};
     my $env = +{
-        HTTP_COOKIE    => $c->res->header('Set-Cookie'),
+        HTTP_COOKIE    => $res->[1]->[1],
         REQUEST_METHOD => 'GET',
         SCRIPT_NAME    => '/',
     };
