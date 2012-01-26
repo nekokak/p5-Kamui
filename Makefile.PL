@@ -18,6 +18,8 @@ requires 'Template';
 requires 'Template::Stash::EscapeHTML';
 requires 'Scalar::Util';
 requires 'FormValidator::Lite';
+requires 'JSON::XS';
+requires 'Text::MicroTemplate::Extended';
 
 test_requires 'Test::More';
 test_requires 'Test::Exception';

@@ -5,7 +5,7 @@ use Mock::Web::Handler;
 
 BEGIN {
     eval "use HTTP::MobileAgent";
-    plan skip_all => 'needs HTP::MobileAgent for testing' if $@;
+    plan skip_all => 'needs HTTP::MobileAgent for testing' if $@;
 };
 
 my $plugins = [qw/Mobile::Agent/];

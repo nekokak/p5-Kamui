@@ -6,7 +6,7 @@ use Mock::Container;
 
 BEGIN {
     eval "use HTTP::MobileAgent";
-    plan skip_all => 'needs HTP::MobileAgent for testing' if $@;
+    plan skip_all => 'needs HTTP::MobileAgent for testing' if $@;
     eval "use HTML::MobileJpCSS";
     plan skip_all => 'needs HTML::MobileJpCSS for testing' if $@;
 };

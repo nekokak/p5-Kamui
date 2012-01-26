@@ -14,28 +14,28 @@ pod2usage(1) if $help;
 
 my $confsrc = <<'...';
 -- lib/$path.pm
-package [%= $module %];
+package <%= $module %>;
 1;
--- lib/$path/Web.pm
-package [%= $module %]::Web;
+-- lib/$path/Web/Handler.pm
+package <%= $module %>::Web::Handler;
 use Kamui;
-use base 'Kamui::Web';
+use base 'Kamui::Web::Handler';
 
-use [%= $module %]::Web::Context;
-sub context    {'[%= $module %]::Web::Context'}
+use <%= $module %>::Web::Context;
+sub context    {'<%= $module %>::Web::Context'}
 
-use [%= $module %]::Web::Dispatcher;
-sub dispatcher {'[%= $module %]::Web::Dispatcher'}
+use <%= $module %>::Web::Dispatcher;
+sub dispatcher {'<%= $module %>::Web::Dispatcher'}
 
 sub view       {'Kamui::View::TT'}
 sub plugins    {['Encode']}
 
-use [%= $module %]::Container -no_export;
-sub container  { [%= $module %]::Container->instance }
+use <%= $module %>::Container -no_export;
+sub container  { <%= $module %>::Container->instance }
 
 1;
 -- lib/$path/Web/Dispatcher.pm
-package [%= $module %]::Web::Dispatcher;
+package <%= $module %>::Web::Dispatcher;
 use Kamui::Web::Dispatcher;
 
 on '/' => run {
@@ -44,12 +44,12 @@ on '/' => run {
 
 1;
 -- lib/$path/Web/Context.pm
-package [%= $module %]::Web::Context;
+package <%= $module %>::Web::Context;
 use Kamui;
 use base 'Kamui::Web::Context';
 1;
 -- lib/$path/Web/Controller/Root.pm
-package [%= $module %]::Web::Controller::Root;
+package <%= $module %>::Web::Controller::Root;
 use Kamui::Web::Controller -base;
 
 __PACKAGE__->add_trigger(
@@ -60,11 +60,13 @@ __PACKAGE__->add_trigger(
 
 sub do_index {
     my ($class, $c, $args) = @_;
+    $c->stash->{title}   = 'kamui page';
+    $c->stash->{content} = 'hello, Kamui world!';
 }
 
 1;
 -- lib/$path/Container.pm
-package [%= $module %]::Container;
+package <%= $module %>::Container;
 use Kamui::Container -base;
 
 register foo => sub {
@@ -72,39 +74,38 @@ register foo => sub {
 };
 
 1;
--- assets/tmpl/root/index.html
-? extends 'base.html';
-? block title => 'kamui page';
-? block content => sub { 'hello, Kamui world!' };
--- assets/tmpl/base.html
+-- assets/tmpl/common/header.html
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title><? block title => 'Kamui' ?></title>
+    <title>[% title | html %]</title>
     <meta http-equiv="Content-Style-Type" content="text/css" />  
     <meta http-equiv="Content-Script-Type" content="text/javascript" />  
 </head>
+-- assets/tmpl/root/index.html
+[% INCLUDE common/header.html %]
 <body>
     <div id="Container">
         <div id="Header">
             <a href="/">Kamui Startup Page</a>
         </div>
         <div id="Content">
-            <? block content => 'body here' ?>
+            [% content | html %]
         </div>
         <div id="Footer">
             Powered by Kamui
         </div>
     </div>
 </body>
+[% INCLUDE common/footer.html %]
+-- assets/tmpl/common/footer.html
 </html>
 -- assets/script/$dist.psgi
-use [%= $module %]::Web::Handler;
-use [%= $module %]::Container;
+use <%= $module %>::Web::Handler;
+use <%= $module %>::Container;
 use Plack::Builder;
-my $app = [%= $module %]::Web::Handler->new;
-$app->setup;
+my $app = <%= $module %>::Web::Handler->new;
 
 my $home = container('home');
 builder {
@@ -116,14 +117,14 @@ builder {
 };
 -- config.pl
 use Kamui;
-use [%= $module %]::Container;
+use <%= $module %>::Container;
 use Path::Class;
 
 my $home = container('home');
 
 return +{
     view => {
-        mt => +{
+        tt => +{
             path => $home->file('assets/tmpl')->stringify,
         },
     },
@@ -167,6 +168,7 @@ sub main {
     _mkpath "assets/htdocs/css/";
     _mkpath "assets/htdocs/img/";
     _mkpath "assets/tmpl/root/";
+    _mkpath "assets/tmpl/common/";
     _mkpath "assets/script/";
     _mkpath "t/";
 
@@ -174,8 +176,8 @@ sub main {
     while (my ($file, $tmpl) = each %$conf) {
         $file =~ s/(\$\w+)/$1/gee;
         my $code = Text::MicroTemplate->new(
-            tag_start => '[%',
-            tag_end   => '%]',
+            tag_start => '<%',
+            tag_end   => '%>',
             line_start => '%',
             template => $tmpl,
         )->code;
