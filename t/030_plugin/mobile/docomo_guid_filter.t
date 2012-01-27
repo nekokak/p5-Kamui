@@ -5,7 +5,7 @@ use Mock::Web::Handler;
 
 BEGIN {
     eval "use HTTP::MobileAgent";
-    plan skip_all => 'needs HTP::MobileAgent for testing' if $@;
+    plan skip_all => 'needs HTTP::MobileAgent for testing' if $@;
     eval "use HTML::StickyQuery::DoCoMoGUID";
     plan skip_all => 'needs HTML::StickyQuery::DoCoMoGUID for testing' if $@;
 };
