@@ -31,7 +31,9 @@ Kamui::Manual::JA::Tutorial - Kamui 日本語チュートリアル
     |   |-- script
     |   |   `-- Hello.psgi
     |   `-- tmpl
-    |       |-- base.html
+    |       `-- common
+    |           `-- header.html
+    |           `-- footer.html
     |       `-- root
     |           `-- index.html
     |-- config.pl
